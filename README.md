@@ -20,7 +20,7 @@ The calculator was built to enable those who may be less proficient in statistic
 
 ## Basic Functionality/Explanation
 
-![Gene ID Mismatch Example](www/GeneIDMismatch.png)
+![Diagram of Enrichment Analysis](www/venn_diagram.png)
 
 The calculator is quite simple; the user uploads the gene sets they want to test for enrichment. The app then runs what is essentially a one-tailed Fisher's Exact Test with the user's uploaded genes for every gene set (currently 171 sets) in the database (against a specified "background universe" of genes). If the user's uploaded genes have a significant overlap with any particular gene set, the gene set is said to be highly represented, or "enriched." Depending on the particular gene set that is enriched, this could have important implications for the user's gene set.
 
@@ -61,7 +61,8 @@ The intersection_ids is the original list of overlapping gene IDs, in the format
 
 Due to the nature of how gene IDs have been historically (and even contemporarily!) catalogued, the different gene symbols that we can use (MGI symbols, Ensembl IDs, Entrez IDs, etc) often have inconsistent IDs that do not map 1-1 between each ID (e.g. some ensembl IDs don't have an entrez ID equivalent, or some ensembl IDs map to multiple entrez IDs, etc.)
 
-![example of nonexistent 1-1 mapping of genes](GeneIDError.png)
+![example of nonexistent 1-1 mapping of genes](www/GeneIDMismatch.png)
+
 
 In dealing with this issue, since we wanted users to be able to upload IDs in any of the 3 usual formats, we decided to take the approach of using 3 different gene set lists. More specifically, we compiled our curated list of 171 gene sets separately for each type of gene ID, based on the availability of gene IDs on biomaRt. This was done to ensure that Fisher's Exact calculations were precise and not being inflated by duplicate gene IDs.
 
@@ -76,7 +77,7 @@ When performing gene set enrichment analysis, the "background" gene set size (nu
 <p align="center">
 <i> If you don't follow this, you might see the following error:</i>
 
-![](images/UnionError.png)
+![](www/UnionError.png)
 </p>
 
 

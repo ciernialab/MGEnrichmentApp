@@ -1,2 +1,130 @@
 # MGEnrichmentApp
-Repo for the Microglia Gene Set Enrichment Calculator shiny application
+
+
+<!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
+
+- [MGEnrichmentApp](#mgenrichmentapp)
+	- [Basic Functionality/Explanation](#basic-functionalityexplanation)
+	- [Tips For Using the App](#tips-for-using-the-app)
+	- [Interpreting Results](#interpreting-results)
+	- [Important Features/Limitations to Know:](#important-featureslimitations-to-know)
+		- [Differing Results Based on Gene ID](#differing-results-based-on-gene-id)
+		- [Union Size Must NOT Be Larger than Genome Size](#union-size-must-not-be-larger-than-genome-size)
+		- [Overflow in Excel](#overflow-in-excel)
+	- [Updating the Datasets](#updating-the-datasets)
+
+<!-- /TOC -->
+This is the repository for the Ciernia Lab's Microglia Gene Set Enrichment Calculator, an application built using the R Shiny package.
+
+The calculator was built to enable those who may be less proficient in statistical analysis, or less familiar with the R programming language, to easily perform gene set enrichment analysis without needing to directly interface with R code. The app runs enrichment analysis on a list of manually curated mouse gene sets relevant to microglia and early development (and thus, to the Ciernia lab's field of research!). The hope is that users will be able to conduct gene set enrichment analysis on their own experiments, even if they are unfamiliar with R, or do not know how to implement gene set enrichment analysis.
+
+## Basic Functionality/Explanation
+
+![Gene ID Mismatch Example](www/GeneIDMismatch.png)
+
+The calculator is quite simple; the user uploads the gene sets they want to test for enrichment. The app then runs what is essentially a one-tailed Fisher's Exact Test with the user's uploaded genes for every gene set (currently 171 sets) in the database (against a specified "background universe" of genes). If the user's uploaded genes have a significant overlap with any particular gene set, the gene set is said to be highly represented, or "enriched." Depending on the particular gene set that is enriched, this could have important implications for the user's gene set.
+
+## Tips For Using the App
+
+The app is designed to be quite straightforward and user-friendly, but brief instructions are provided here (and on the app itself) for convenience and clarity:
+
+- **Uploading User Gene Set (Set A)** - the app can take in a gene set via text input in the textbox, or by uploading a dataset (acceptable file formats are csv, tsv and txt). The app can take in Ensembl, Entrez and MGI symbol gene IDs, but can only parse one type at a time, so all gene IDs need to follow the same ID type, and you must correctly specify which ID type you are using for the matching to work properly. If you are pasting in IDs, they can be separated by tabs, spaces or commas.
+- **Selecting A Background Gene Set (Set U)** - the enrichment analysis uses the Fisher's Exact Test to measure the overlap between your uploaded gene set and the database of microglia gene sets. To do this, it needs a background "universe" number of genes to calculate how significant the overlap is. You can either set the background number of genes to be all mouse genes *(All mm10 Genes)*, or all the genes currently in the database *(All Genes in the Database)*. Alternatively, if you have your own set of genes you want to upload, you can upload a custom set by selecting *Custom*. Format for the custom background set follows the user-uploaded gene set format.
+
+- **Uploading Background Gene Set** - If you do choose to upload a custom gene set, it must be large enough to serve as a background gene set (it should be larger than the largest gene set in the database (7266 genes) + your user uploaded gene set). See [here](#union-size-must-not-be-larger-than-genome-size) for clarification.
+- **Filtering & Disabling IDs** - the p-value slider can be used to filter your results for FDR significance level. There are also checkbox options to remove the specified columns from the output, which may be useful if your gene set is very long (this can tend to skew the rows of your table and make it hard to view).
+- **Querying Genes** - once you’re done toggling the various settings, you can click **Query Genes**, and the app will generate the resulting enrichment table, and you will be able to download the results as a csv file. Note that the results are only generated when the **Query Genes** button is clicked. If you make any further setting changes after generating results, recalculations will only come into effect when you click the button again to regenerate results.
+- **Downloading Results** - simply click the "Download Results" button to export your results to a csv file. Note that the results download as is (whatever filtering settings you've used carry over - what you see is what you get).
+
+## Interpreting Results
+- **listname** - name of the gene set that is being compared against.
+- **pvalue** - p-value of enrichment analysis (as calculated by one-tailed Fisher's Exact Test).
+- **OR** - the Odds Ratio.
+- **notAnotB** - number of genes not in any gene set.
+- **inAnotB** - number of genes in the user's uploaded gene set (set A) but not in the current database gene set being analyzed (set B).
+- **inBnotA** - number of genes in the current database gene set (set B) but not in the user uploaded gene set (set A).
+- **inBinA** - number of genes in both the current database gene set and the user uploaded gene set.
+- **intersection_IDs** - the direct list of overlapping gene IDs (inBinA). This will be in the gene ID type that you have selected, and is the original overlap list, so use this for final results.
+- **intersection_ensembl** - the intersection_IDs, converted to ensembl, if possible.
+- **intersection_mgi_symbol** - the intersection_IDs, converted to MGI symbols, if possible.
+- **intersection_entrez** - the intersection_IDs, converted to entrez, if possible.
+- **FDR** - false discovery rate correction value.
+- **description** - brief description of gene set.
+- **source** - literature source of gene sets, if applicable.
+- **groups** - gene set category grouping.
+
+The intersection_ids is the original list of overlapping gene IDs, in the format you uploaded and selected for your genes. The 3 successive columns after try to map the gene ID to its corresponding alternate ID equivalents, if possible (therefore one of the columns will be redundant, as it will be in the same gene ID type as what you uploaded, and due to [mapping](#differing-results-based-on-gene-id) problems, it is not fully complete). It is provided only for convenience to potentially lookup genes of interest faster. When reporting results, use the intersection_ids column for the most accurate results, and convert to other ID types through other means, if necessary.
+
+## Important Features/Limitations to Know:
+
+### Differing Results Based on Gene ID
+
+Due to the nature of how gene IDs have been historically (and even contemporarily!) catalogued, the different gene symbols that we can use (MGI symbols, Ensembl IDs, Entrez IDs, etc) often have inconsistent IDs that do not map 1-1 between each ID (e.g. some ensembl IDs don't have an entrez ID equivalent, or some ensembl IDs map to multiple entrez IDs, etc.)
+
+![example of nonexistent 1-1 mapping of genes](GeneIDError.png)
+
+In dealing with this issue, since we wanted users to be able to upload IDs in any of the 3 usual formats, we decided to take the approach of using 3 different gene set lists. More specifically, we compiled our curated list of 171 gene sets separately for each type of gene ID, based on the availability of gene IDs on biomaRt. This was done to ensure that Fisher's Exact calculations were precise and not being inflated by duplicate gene IDs.
+
+As a result, this means that depending on which ID you use, the gene lists will have certain IDs that may not be present. Therefore, you will get slightly differing results for each gene ID.
+
+**If possible, we recommend using Ensembl IDs,** as this would work best for our database (our list of MG relevant genes was originally compiled using Ensembl IDs). This should provide the most complete and accurate version of results.
+
+### Union Size Must NOT Be Larger than Genome Size
+
+When performing gene set enrichment analysis, the "background" gene set size (number of genes) that is chosen must always be greater than the combined size of the user uploaded gene set and each gene list in the database (if you think about it, it makes sense, because when comparing against a background set of genes, your background or "universe" set of genes should contain all of your genes). As such, if a user uploads their own background gene set, they must ensure it is large enough to serve as a background set.
+
+<p align="center">
+<i> If you don't follow this, you might see the following error:</i>
+
+![](images/UnionError.png)
+</p>
+
+
+Also note that when uploading genesets, the app only cares about the size of the geneset. It doesn't take into account the actual genes (in theory, all the genes in your custom background set should contain all the genes in the database, as well as your user uploaded gene sets, which is why it needs to be bigger than the union of the user uploaded gene set and the database gene set).
+
+The largest gene set is currently 7266 genes long (**E18 vs P60 Female MG**). Thus, any background set uploaded must be greater than or equal to your uploaded gene set + 7266.
+
+
+### Overflow in Excel
+If the user's input gene set is very long, there is a chance the number of intersection gene IDs for each gene set can be very long as well. Excel has a limit of 32,767 characters per cell, and so if your intersection ID set exceeds this, this will overflow in Excel since the character string can't be contained in the cell, and the output of the string is carried over to the next line. In Excel, this is roughly:
+- for ensembl (assuming mean length of 20 characters): ~1630 genes
+- Entrez (assuming mean length of 8 characters): ~4090 genes
+- MGI Symbol (assuming mean length 7 characters): ~4680 genes
+
+You can also open the results on Google Sheets, which has a limit of 50,000 characters. This increases the limit slightly to:
+
+- for ensembl (assuming mean length of 20 characters): ~2500 genes
+- Entrez (assuming mean length of 8 characters): ~6250 genes
+- MGI Symbol (assuming mean length of 7 characters): ~7140 genes
+
+In cases where the user would prefer to use Excel, and would rather the values be truncated to avoid the overflow error, there is also the option to download the dataset with the results truncated (just disable the error-inducing column using the corresponding checkbox) to ensure that the maximum intersection gene IDs for each gene type does not exceed the above stated value, and to avoid overflow happening.
+
+Alternatively, if you want the full results, you will either need to get the results while running the app, or open the csv file in another text editor (such as Notepad++, TextEdit, BBEdit, etc). Or you may view it on Excel, with the format messed up, if that doesn't bother you!
+
+
+## Updating the Datasets
+
+If you ever need to update the datasets used in the database, there are 3 types of datasets that can/should be updated.
+- mouse genome dataset (mouse_genes, dataframe)
+- Microglia Relevant Genes Dataset (masterlist, dataframe)
+- Final datasets used in the app (EnsemblList, entrezList, mgiList, which is a merging of the previous 2, by ensembl)
+ There is a separate script attached (called NewGeneLists.R) that can be run to regenerate all these datasets, pulling from biomaRt and a manually curated spreadsheet of MG-relevant genes.
+
+The only thing that needs to be manually updated/uploaded is the curated Microglia Relevant Genes Dataset., which is a manually curated list by Dr. Ciernia. When running the script to update the database, be sure to use the most current microglia relevant genes dataset from Dr. Ciernia.
+
+If you have any further questions or concerns about the app and how to use it, you can contact the Ciernia Lab at ciernialab@gmail.com
+
+
+<!---- ## Info for Developers
+
+Provided here are tips/useful things to know that anyone who might want to modify the app may find useful.
+
+At the moment, the app essentially serves as a wrapper for the GeneOverlap R package (which can be found on bioconductor).
+
+If you ever need to modify the core functionality of the app, and find that the dashboard layout is interfering with output, you can simply remove the dashboard theme and stick with the default side bar layout that R Shiny utilizies. If needed, there is a copy of the app using the default layout, which can be found here().
+
+The functions are executed pretty much sequentially exactly as they were laid out. For clarity's sake, I've provided a pseudo call graph here:
+
+**need to write call graph**
+
+------>

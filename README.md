@@ -38,12 +38,12 @@ listname: a short and succinct name/tag for the list
 description: a longer description of what the genes in the list are (ie. DEGs from WT vs Mutant microglia)
 source: paper citation for the list
 groups: one of the following (or make your own new catagory!):
-	"Neuropsychatic & Neurodevelopmental Disorders human brain"
-	"Microglia Development"   
-	"Microglia"    
-	"ASD regulators" 
-	"inflammation"       
-	"ASD genetics"        
+- **Neuropsychatic & Neurodevelopmental Disorders human brain** -
+- **Microglia Development** -
+- **Microglia** -
+- **ASD regulators** -
+- **inflammation** -
+- **ASD genetics** -    
 
 Species: the species the genelist was originally collected from (rat, human, mouse). All genes are converted to Mouse IDs.         
 tissue: tissue type or cell type used in the dataset (ie. brain or microglia)
@@ -148,12 +148,12 @@ listname: a short and succinct name/tag for your list (what you might show on a 
 description: a longer description of what the genes in the list are (ie. DEGs from WT vs Mutant microglia)
 source: paper citation for the list
 groups: one of the followig (or make your own new catagory!):
-	"Neuropsychatic & Neurodevelopmental Disorders human brain"
-	"Microglia Development"   
-	"Microglia"    
-	"ASD regulators" 
-	"inflammation"       
-	"ASD genetics"        
+- **Neuropsychatic & Neurodevelopmental Disorders human brain** -
+- **Microglia Development** -
+- **Microglia** -
+- **ASD regulators** -
+- **inflammation** -
+- **ASD genetics** -        
 
 Species: the species the genelist was originally collected from (rat, human, mouse). All genes should be converted to Mouse IDs.         
 tissue: tissue type or cell type used in the dataset (ie. brain or microglia)

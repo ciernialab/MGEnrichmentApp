@@ -37,7 +37,7 @@ entrezgene_id: the corresponding mgi_symols in the list
 listname: a short and succinct name/tag for the list 
 description: a longer description of what the genes in the list are (ie. DEGs from WT vs Mutant microglia)
 source: paper citation for the list
-groups: one of the following (or make your own new catagory!):
+groups: one of the following:
 - **Neuropsychatic & Neurodevelopmental Disorders human brain** -
 - **Microglia Development** -
 - **Microglia** -

@@ -30,14 +30,14 @@ The database of gene lists has been manually currated to include a wide assortme
 A summary of the database including papers, lists and numbers of genes is included here as: Genelists.in.mm10Database.11.21.2020.csv
 
 The database includes the following information for each dataset:
-ensembl_gene_id: all the ensembl IDs in the list
-mgi_symbol: the corresponding mgi_symols in the list
-hgnc_symbol: the corresponding human hgnc_symbols in the list
-entrezgene_id: the corresponding mgi_symols in the list   
-listname: a short and succinct name/tag for the list 
-description: a longer description of what the genes in the list are (ie. DEGs from WT vs Mutant microglia)
-source: paper citation for the list
-groups: one of the following:
+- ensembl_gene_id: all the ensembl IDs in the list
+- mgi_symbol: the corresponding mgi_symols in the list
+- hgnc_symbol: the corresponding human hgnc_symbols in the list
+- entrezgene_id: the corresponding mgi_symols in the list   
+- listname: a short and succinct name/tag for the list 
+- description: a longer description of what the genes in the list are (ie. DEGs from WT vs Mutant microglia)
+- source: paper citation for the list
+- groups: one of the following:
 - **Neuropsychatic & Neurodevelopmental Disorders human brain** -
 - **Microglia Development** -
 - **Microglia** -
@@ -45,8 +45,8 @@ groups: one of the following:
 - **inflammation** -
 - **ASD genetics** -    
 
-Species: the species the genelist was originally collected from (rat, human, mouse). All genes are converted to Mouse IDs.         
-tissue: tissue type or cell type used in the dataset (ie. brain or microglia)
+- Species: the species the genelist was originally collected from (rat, human, mouse). All genes are converted to Mouse IDs.         
+- tissue: tissue type or cell type used in the dataset (ie. brain or microglia)
 
 
 ## How to Use the App
@@ -141,22 +141,22 @@ If you want to build your own version of the app and need to update the gene lis
  
 To update the Microglia Relevant Genes Database itself - each row is a gene and make sure to include the following columns:
 ensembl_gene_id: all the ensembl IDs for your list
-mgi_symbol: the corresponding mgi_symols for your list
-hgnc_symbol: the corresponding human hgnc_symbols for your list
-entrezgene_id: the corresponding mgi_symols for your list   
-listname: a short and succinct name/tag for your list (what you might show on a plot to distinguish the list, needs to be unique for the list)
-description: a longer description of what the genes in the list are (ie. DEGs from WT vs Mutant microglia)
-source: paper citation for the list
-groups: one of the followig (or make your own new catagory!):
-- **Neuropsychatic & Neurodevelopmental Disorders human brain** -
-- **Microglia Development** -
-- **Microglia** -
-- **ASD regulators** -
-- **inflammation** -
-- **ASD genetics** -        
+- mgi_symbol: the corresponding mgi_symols for your list
+- hgnc_symbol: the corresponding human hgnc_symbols for your list
+- entrezgene_id: the corresponding mgi_symols for your list   
+- listname: a short and succinct name/tag for your list (what you might show on a plot to distinguish the list, needs to be unique for the list)
+- description: a longer description of what the genes in the list are (ie. DEGs from WT vs Mutant microglia)
+- source: paper citation for the list
+- groups: one of the followig (or make your own new catagory!):
+- **Neuropsychatic & Neurodevelopmental Disorders human brain** 
+- **Microglia Development** 
+- **Microglia**
+- **ASD regulators** 
+- **inflammation** 
+- **ASD genetics**       
 
-Species: the species the genelist was originally collected from (rat, human, mouse). All genes should be converted to Mouse IDs.         
-tissue: tissue type or cell type used in the dataset (ie. brain or microglia)
+- Species: the species the genelist was originally collected from (rat, human, mouse). All genes should be converted to Mouse IDs.         
+- tissue: tissue type or cell type used in the dataset (ie. brain or microglia)
 
 
 If you have any further questions or concerns about the app and how to use it, you can contact the Ciernia Lab at ciernialab@gmail.com

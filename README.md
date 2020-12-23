@@ -16,44 +16,44 @@
 <!-- /TOC -->
 This is the repository for the Ciernia Lab's Microglia Gene Set Enrichment Calculator, an application built using the R Shiny package.
 
-The calculator was built to enable those who may be less proficient in statistical analysis, or less familiar with the R programming language, to easily perform gene set enrichment analysis without needing to directly interface with R code. The app runs enrichment analysis on a list of manually curated mouse gene sets relevant to microglia and early development (and thus, to the Ciernia lab's field of research!). The hope is that users will be able to conduct gene set enrichment analysis on their own experiments, even if they are unfamiliar with R, or do not know how to implement gene set enrichment analysis. 
+The calculator was built to enable those who may be less proficient in statistical analysis, or less familiar with the R programming language, to easily perform gene set enrichment analysis without needing to directly interface with R code. The app runs enrichment analysis on a list of manually curated mouse gene sets relevant to microglia and early development (and thus, to the Ciernia lab's field of research!). The hope is that users will be able to conduct gene set enrichment analysis on their own experiments, even if they are unfamiliar with R, or do not know how to implement gene set enrichment analysis.
 
 ## Basic Functionality/Explanation
 
 ![Diagram of Enrichment Analysis](www/venn_diagram.png)
 
-We use the GeneOverlap Function (http://bioconductor.org/packages/release/bioc/html/GeneOverlap.html) to compare the user input list to each list in the database. Given the two gene lists, we test the significance of their overlap in comparison with a genomic background (specified "background universe" of genes) using a one-tailed Fisher's Exact Test. The null hypothesis is that the odds ratio is no larger than 1. The alternative is that the odds ratio is larger than 1.0. The user input list is compared to each list in the database in an independent test and then all tests are corrected for multiple comparisons using a False Discovery Rate (FDR) of .05. 
+We use the GeneOverlap Function (http://bioconductor.org/packages/release/bioc/html/GeneOverlap.html) to compare the user input list to each list in the database. Given the two gene lists, we test the significance of their overlap in comparison with a genomic background (specified "background universe" of genes) using a one-tailed Fisher's Exact Test. The null hypothesis is that the odds ratio is no larger than 1. The alternative is that the odds ratio is larger than 1.0. The user input list is compared to each list in the database in an independent test and then all tests are corrected for multiple comparisons using a False Discovery Rate (FDR) of .05.
 
 ## The mm10 Database
 
-The database of gene lists has been manually currated to include a wide assortment of microglial relevant gene lists collected from multiple treatments, disease states, etc in microglia or brain from mouse, human or rat. All gene IDs are converted to mouse, so if you want to compare to your human gene list you need to conver to mouse gene IDs first.
-A summary of the database including papers, lists and numbers of genes is included here as: Genelists.in.mm10Database.11.21.2020.csv
+The database of gene lists has been manually curated to include a wide assortment of microglial relevant gene lists collected from multiple treatments, disease states, etc in microglia or brain from mouse, human or rat. All gene IDs are converted to mouse, so if you want to compare to your human gene list you need to convert to mouse gene IDs first.
+A summary of the database including papers, lists and numbers of genes is included here as: [Genelists.in.mm10Database.11.21.2020.csv](https://github.com/ciernialab/MGEnrichmentApp/blob/main/Genelists.in.mm10Database.11.21.2020.csv)
 
 The database includes the following information for each dataset:
-- ensembl_gene_id: all the ensembl IDs in the list
-- mgi_symbol: the corresponding mgi_symols in the list
-- hgnc_symbol: the corresponding human hgnc_symbols in the list
-- entrezgene_id: the corresponding mgi_symols in the list   
-- listname: a short and succinct name/tag for the list 
-- description: a longer description of what the genes in the list are (ie. DEGs from WT vs Mutant microglia)
-- source: paper citation for the list
-- groups: one of the following:
-- **Neuropsychatic & Neurodevelopmental Disorders human brain** -
-- **Microglia Development** -
-- **Microglia** -
-- **ASD regulators** -
-- **inflammation** -
-- **ASD genetics** -    
+- **ensembl_gene_id** - all the ensembl IDs in the list
+- **mgi_symbol** - the corresponding mgi_symols in the list
+- **hgnc_symbol** - the corresponding human hgnc_symbols in the list
+- **entrezgene_id** - the corresponding entrez IDs in the list   
+- **listname** - a short and succinct name/tag for the list
+- **description** - a longer description of what the genes in the list are (e.g. DEGs from WT vs Mutant microglia)
+- **source** - paper citation for the list
+- **groups** - broad category of the list, belonging to one of the following:
+	- *Neuropsychatic & Neurodevelopmental Disorders human brain*
+	- *Microglia Development*
+	- *Microglia*
+	- *ASD regulators*
+	- *Inflammation*
+	- *ASD genetics*
 
-- Species: the species the genelist was originally collected from (rat, human, mouse). All genes are converted to Mouse IDs.         
-- tissue: tissue type or cell type used in the dataset (ie. brain or microglia)
+- **Species** - the species the list was originally collected from (rat, human, mouse). All genes are converted to Mouse IDs.         
+- **tissue** - tissue type or cell type used in the dataset (ie. brain or microglia)
 
 
 ## How to Use the App
 
 The app is designed to be quite straightforward and user-friendly, but brief instructions are provided here (and on the app itself) for convenience and clarity:
 
-- **Uploading User Gene Set (Set A)** - the app can take in a gene set via text input in the textbox, or by uploading a dataset (acceptable file formats are csv, tsv and txt). The app can take in Ensembl, Entrez and MGI symbol gene IDs, but can only parse one type at a time, so all gene IDs need to follow the same ID type, and you must correctly specify which ID type you are using for the matching to work properly. If you are pasting in IDs, they can be separated by tabs, spaces or commas. The app currently only support MOUSE gene IDs. The overlapp calculations are performed using the gene ID type that the user selects. Since gene ID types are not always 1:1, if you switch ID types you may get slightly different overlap results (see limitations below).
+- **Uploading User Gene Set (Set A)** - the app can take in a gene set via text input in the textbox, or by uploading a dataset (acceptable file formats are csv, tsv and txt). The app can take in Ensembl, Entrez and MGI symbol gene IDs, but can only parse one type at a time, so all gene IDs need to follow the same ID type, and you must correctly specify which ID type you are using for the matching to work properly. If you are pasting in IDs, they can be separated by tabs, spaces or commas. The app currently only supports MOUSE gene IDs. The overlap calculations are performed using the gene ID type that the user selects. Since gene ID types are not always 1:1, if you switch ID types you may get slightly different overlap results (see limitations below).
 - **Selecting A Background Gene Set (Set U)** - the enrichment analysis uses the Fisher's Exact Test to measure the overlap between your uploaded gene set and the database of microglia gene sets. To do this, it needs a background "universe" number of genes to calculate how significant the overlap is. You can either set the background number of genes to be all mouse genes *(All mm10 Genes)*, or all the genes currently in the database *(All Genes in the Database)*. Alternatively, if you have your own set of genes you want to upload, you can upload a custom set by selecting *Custom*. Format for the custom background set follows the user-uploaded gene set format.
 
 - **Uploading Background Gene Set** - If you do choose to upload a custom gene set, it must be large enough to serve as a background gene set (it should be larger than the largest gene set in the database (7266 genes) + your user uploaded gene set). See [here](#union-size-must-not-be-larger-than-genome-size) for clarification.
@@ -81,7 +81,7 @@ The app is designed to be quite straightforward and user-friendly, but brief ins
 - **tissue** - the original tissue used to generate the dataset
 
 
-The intersection_ids is the original list of overlapping gene IDs, in the format you uploaded and selected for your genes. The 3 successive columns after try to map the gene ID to its corresponding alternate ID equivalents, if possible (therefore one of the columns will be redundant, as it will be in the same gene ID type as what you uploaded, and due to [mapping](#differing-results-based-on-gene-id). It is provided only for convenience to potentially lookup genes of interest faster. When reporting results, use the intersection_ids column for the most accurate results.
+The intersection_ids is the original list of overlapping gene IDs, in the format you uploaded and selected for your genes. The 3 successive columns after try to map the gene ID to its corresponding alternate ID equivalents, if possible (therefore one of the columns will be redundant, as it will be in the same gene ID type as what you uploaded, and due to [mapping](#differing-results-based-on-gene-id) problems, wit is not fully complete). It is provided only for convenience to potentially lookup genes of interest faster. When reporting results, use the intersection_ids column for the most accurate results.
 
 ## Important Features/Limitations to Know:
 
@@ -138,25 +138,25 @@ If you want to build your own version of the app and need to update the gene lis
 - Microglia Relevant Genes Dataset (masterlist, dataframe)
 - Final datasets used in the app (EnsemblList, entrezList, mgiList, which is a merging of the previous 2, by ensembl)
  There is a separate script attached (called NewGeneLists.R) that can be run to regenerate all these datasets, pulling from biomaRt and a manually curated spreadsheet of MG-relevant genes.
- 
+
 To update the Microglia Relevant Genes Database itself - each row is a gene and make sure to include the following columns:
 ensembl_gene_id: all the ensembl IDs for your list
-- mgi_symbol: the corresponding mgi_symols for your list
-- hgnc_symbol: the corresponding human hgnc_symbols for your list
-- entrezgene_id: the corresponding mgi_symols for your list   
-- listname: a short and succinct name/tag for your list (what you might show on a plot to distinguish the list, needs to be unique for the list)
-- description: a longer description of what the genes in the list are (ie. DEGs from WT vs Mutant microglia)
-- source: paper citation for the list
-- groups: one of the followig (or make your own new catagory!):
-- **Neuropsychatic & Neurodevelopmental Disorders human brain** 
-- **Microglia Development** 
-- **Microglia**
-- **ASD regulators** 
-- **inflammation** 
-- **ASD genetics**       
+- **mgi_symbol** - the corresponding mgi_symols for your list
+- **hgnc_symbol** - the corresponding human hgnc_symbols for your list
+- **entrezgene_id** - the corresponding entrez IDs for your list   
+- **listname** - a short and succinct name/tag for your list (what you might show on a plot to distinguish the list, needs to be unique for the list)
+- **description** - a longer description of what the genes in the list are (ie. DEGs from WT vs Mutant microglia)
+- **source** - paper citation for the list
+- **groups** - one of the following (or make your own new category!):
+	- *Neuropsychatic & Neurodevelopmental Disorders human brain*
+	- *Microglia Development*
+	- *Microglia*
+	- *ASD regulators*
+	- *inflammation*
+	- *ASD genetics*    
 
-- Species: the species the genelist was originally collected from (rat, human, mouse). All genes should be converted to Mouse IDs.         
-- tissue: tissue type or cell type used in the dataset (ie. brain or microglia)
+- **Species** - the species the genelist was originally collected from (rat, human, mouse). All genes should be converted to Mouse IDs.         
+- **tissue** - tissue type or cell type used in the dataset (ie. brain or microglia)
 
 
 If you have any further questions or concerns about the app and how to use it, you can contact the Ciernia Lab at ciernialab@gmail.com

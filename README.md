@@ -5,13 +5,14 @@
 
 - [MGEnrichmentApp](#mgenrichmentapp)
 	- [Basic Functionality/Explanation](#basic-functionalityexplanation)
-	- [Tips For Using the App](#tips-for-using-the-app)
+	- [The mm10 Database](#the-mm10-database)
+	- [How to Use the App](#how-to-use-the-app)
 	- [Interpreting Results](#interpreting-results)
 	- [Important Features/Limitations to Know:](#important-featureslimitations-to-know)
 		- [Differing Results Based on Gene ID](#differing-results-based-on-gene-id)
 		- [Union Size Must NOT Be Larger than Genome Size](#union-size-must-not-be-larger-than-genome-size)
 		- [Overflow in Excel](#overflow-in-excel)
-	- [Updating the Datasets](#updating-the-datasets)
+	- [Updating the Database](#updating-the-database)
 
 <!-- /TOC -->
 This is the repository for the Ciernia Lab's Microglia Gene Set Enrichment Calculator, an application built using the R Shiny package.

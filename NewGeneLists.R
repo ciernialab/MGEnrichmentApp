@@ -1,8 +1,7 @@
 # Script Comments ---------------------------------------------------------
-# this is a script that can be used to regenerate the datasets used in the
+# this is a script that can be used to regenerate some of datasets used in the
 # MGEnrichment app as required whenever they need to be updated
-# simply update the spreadsheet that is read in as "masterlist", and the script
-# will do the rest
+# simply update the spreadsheet that is read in as "masterlist"
 
 library(biomaRt)
 library(here)
@@ -18,11 +17,12 @@ mouse_genes <- getBM(attributes = c("ensembl_gene_id","mgi_symbol", "hgnc_symbol
 
 # read in mg genelists - this is a manually curated dataset containing MG relevant genes
 # every time the spreadsheet is updated, it can be reloaded here
-masterlist <- read.csv(here("Genelists.in.mm10Database.11.21.2020.csv"))[,-1]
+masterlist <- read.csv(here("Microglia.Mouse.GeneListDatabase.11.21.2020.csv"))[,-1]
 
 
 ##################################################################################
 #add in new genelists - Example
+#replace datasets with your own csv files
 ##################################################################################
 #DAM MG
 
@@ -30,6 +30,7 @@ masterlist <- read.csv(here("Genelists.in.mm10Database.11.21.2020.csv"))[,-1]
 #[1] "ensembl_gene_id" "mgi_symbol"      "hgnc_symbol"     "entrezgene_id"   "listname"        "description"    
 #[7] "source"          "groups"          "Species"         "tissue"          "shortname" 
 
+### sample datasets
 DAM1 <- read.csv("DAMgreaterHOM.MG.csv")
 DAM2 <- read.csv("DAMlessHOM.MG.csv")
 DAM3 <- read.csv("DAMstage1greaterDAMstage2.MG.csv")
@@ -49,6 +50,8 @@ summ.files <- summ.files %>% distinct() %>%
   summarize(ensemble.genes = n())
 
 write.csv(summ.files, file= "Genelists.in.mm10Database.newdatehere.csv")
+
+#--------------------------------
   
 #write out new R objects for comparisons for each gene ID type:
 mergedGenes <- DataBasemm10

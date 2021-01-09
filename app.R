@@ -12,6 +12,7 @@
 # Load Datasets & Packages ------------------------------------------------
 
 library(shiny)
+library(here)
 library(tidyverse)
 library(GeneOverlap)
 library(vroom)
@@ -26,18 +27,12 @@ getOption("repos")
 # there are 5 key datasets used in this script
 # mouse_genes - contains all the mouse genes
 # masterlist - contains all the MG-relevant genes, and their corresponding gene IDs
-# ensemblList, entrezList, mgiList - (the MG-relevant genes sorted into gene lists) for each respective gene ID
+# ensemblList, entrezList, mgiList - (the MG-relevant genes sorted into gene lists) for each respective gene ID. These are generated in the app
 
 #load in datasets from here:
 load(file="GeneLists.RData")
+#masterlist <- dplyr::select(masterlist, -entrezgene_id, -mgi_symbol, -hgnc_symbol)
 
-#load(file = "~/Google Drive/4th Year/Ciernia Lab/Shiny_Applications/Annie's_App/geneListDatabaseFiles.RData")
-#mouse_genes <- read.csv("~/Google Drive/4th Year/Ciernia Lab/Shiny_Applications/MGEnrichmentApp/All_ensemble_mm10genes.csv", stringsAsFactors = F)
-
-
-#initializes default mm10 values
-mm10genome <- length(unique(mouse_genes$mgi_symbol))
-mm10genes <- length(unique(masterlist$ensembl_gene_id))
 
 # Designing User Interface ---------------------------------------------------------------
 # this section describes all the graphical user interface of the app
@@ -64,6 +59,10 @@ ui <- dashboardPage(
                                   choices = c("Ensembl" = "ensembl_gene_id",
                                               "Entrez" = "entrezgene_id",
                                               "MGI Symbol" = "mgi_symbol")),
+                     checkboxGroupInput("groupFilterID", "Which gene list groups are you interested in?", inline = TRUE,
+                                        choiceNames = unique(masterlist$groups),
+                                        choiceValues = unique(masterlist$groups),
+                                        selected = unique(masterlist$groups)),
                      radioButtons("background", "Set the background query:",
                                   choices = c("All mm10 Genes" = "reference",
                                               "All Genes in the Database" = "intersection",
@@ -72,8 +71,7 @@ ui <- dashboardPage(
                      # conditionalPanel uses a javascript expression to only display the background gene
                      # upload inputs when "custom" is selected in the previous radioButton selection
                      conditionalPanel(condition = "input.background == 'custom'",
-                                      textAreaInput("txtBackgroundID", label = "Input your background genes of 
-                          interest here",
+                                      textAreaInput("txtBackgroundID", label = "Input your background genes of interest here",
                                                     placeholder = "CxCl2, 344521, ENSMUSG00000000202,..."),
                                       fileInput("fileBackgroundID", "or upload your background list here", accept = c(".csv", ".tsv", ".txt"))),
                      checkboxGroupInput("displayID", "Disable Intersection Gene IDs?", inline = TRUE,
@@ -136,6 +134,7 @@ ui <- dashboardPage(
 
 server <- function(input, output, session) {
     
+    # Switch List Function
     # switch function is used to change which list is used, depending on user input
     # https://www.datamentor.io/r-programming/switch-function/
     # input: typeID (user input)
@@ -147,6 +146,9 @@ server <- function(input, output, session) {
                entrezgene_id = "entrezgene_id",
                mgi_symbol = "mgi_symbol")
     })
+    
+    
+    
     # Overlap Function --------------------------------------------------------
     
     # this is the overlap function used to run the analysis
@@ -241,6 +243,47 @@ server <- function(input, output, session) {
     # The giant reactive function called to calculate results.
     # Could benefit from splitting into smaller helper functions...
     result_calculation <- reactive({
+        
+        
+        # Filter Masterlist by User-Specified Groups ------------------------------
+        
+        #filterMasterlist <- reactive({
+        
+        #list of groups that the user wants
+        groupsToFilter <- input$groupFilterID
+        
+        #creates new filtered masterlist based on criteria
+        masterlistFiltered <- filter(masterlist, masterlist$groups %in% groupsToFilter)
+        
+        #mergedGenes <- merge(mouse_genes, masterlist, by = "ensembl_gene_id", all.x = T, all.y = T)
+        #assume no need to merge as masterlist will always have the 4 IDs already
+        #so deleting for now, but leaving in case this changes in the future
+        
+        # generate ensembl list
+        ensemblList <- split(masterlistFiltered$ensembl_gene_id, masterlistFiltered$listname) %>% 
+            sapply(na.omit) %>% 
+            sapply(unique)
+        
+        
+        # generate entrez list
+        entrezList <- split(masterlistFiltered$entrezgene_id, masterlistFiltered$listname) %>% 
+            sapply(na.omit) %>% 
+            sapply(unique) 
+        
+        # generate MGI list
+        mgiList <- split(masterlistFiltered$mgi_symbol, masterlistFiltered$listname) %>% 
+            sapply(na.omit) %>% 
+            sapply(unique)
+        
+        
+        #initializes default mm10 values
+        mm10genome <- length(unique(mouse_genes$mgi_symbol))
+        mm10genes <- length(unique(masterlistFiltered$ensembl_gene_id))
+        
+        
+        #})
+        
+        
         
         # Reading in User Input & Matching Lists ---------------------
         # here we define the functions used to interpret user input, and to determine
@@ -356,22 +399,22 @@ server <- function(input, output, session) {
         results$FDR <- as.numeric(formatC(x = as.numeric(results$FDRdrop), format = "E"))
         
         #gets gene set list information
-        p <- masterlist %>%
-            dplyr::select(-ensembl_gene_id, -graphname, -ID) %>%
-            distinct()#.keep_all = T)
+        geneSetInfo <- masterlistFiltered %>%
+            dplyr::select(-ensembl_gene_id, -mgi_symbol, -hgnc_symbol, -entrezgene_id) %>% 
+            distinct()
         
         #change one of the gene list names to be correct
         #p$description[91] <- "differential gene expression polyI:C MIA on GD14, whole brain microglia P0"
         
         #merge the result dataframe and list information dataframe together
-        merged_results <- merge(results, p, by=c("listname"), all.x=T)
+        merged_results <- merge(results, geneSetInfo, by=c("listname"), all.x=T)
         merged_results <- unique(merged_results)
         
         #this filters the dataframe to remove any values <= user input p value
         merged_results <- merged_results %>% 
             filter(FDRdrop <= input$pval) %>% 
             #drops the dummy FDR column
-            select(-FDRdrop)
+            dplyr::select(-FDRdrop)
         
         return(merged_results)
     })
@@ -379,7 +422,7 @@ server <- function(input, output, session) {
     # Displaying Output -------------------------------------------------------
     
     # removes the intersection IDs specified by user
-    remove_ids <- reactive(select(result_calculation(), -input$displayID))
+    remove_ids <- reactive(dplyr::select(result_calculation(), -input$displayID))
     
     # eventReactive delays any querying until you click "Query Gene", since
     # if we have a lot of genes this could be a hassle if every change of a setting

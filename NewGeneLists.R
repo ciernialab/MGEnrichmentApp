@@ -51,29 +51,16 @@ summ.files <- summ.files %>% distinct() %>%
 
 write.csv(summ.files, file= "Genelists.in.mm10Database.newdatehere.csv")
 
+masterlist <- DataBasemm10
+
 #--------------------------------
   
 #write out new R objects for comparisons for each gene ID type:
-mergedGenes <- DataBasemm10
-# generate ensembl list
-ensemblList <- split(mergedGenes$ensembl_gene_id, mergedGenes$listname)
-ensemblList <- sapply(ensemblList, na.omit)
-ensemblList <- sapply(ensemblList, unique)
+# mergedGenes <- merge(mouse_genes, DataBasemm10, by = "ensembl_gene_id", all.x = T, all.y = T)
 
 
-# generate entrez list
-entrezList <- split(mergedGenes$entrezgene_id, mergedGenes$listname)
-entrezList <- sapply(entrezList, na.omit)
-entrezList <- sapply(entrezList, unique)
-
-# generate MGI list
-mgiList <- split(mergedGenes$mgi_symbol, mergedGenes$listname)
-mgiList <- sapply(mgiList, na.omit)
-mgiList <- sapply(mgiList, unique)
-
-
-# save data output
-save(ensemblList, entrezList, mgiList, mouse_genes, masterlist, 
+# save data output (only masterlist and mouse_genes, the other 3 are generated in app)
+save(mouse_genes, masterlist,
      file = here("GeneLists.RData"))
 
 

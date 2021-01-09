@@ -9,6 +9,7 @@
 	- [How to Use the App](#how-to-use-the-app)
 	- [Interpreting Results](#interpreting-results)
 	- [Important Features/Limitations to Know:](#important-featureslimitations-to-know)
+	  - [Filtering the Genes by Groups May Affect Results](#filtering-the-genes-by-groups-may-affect-results)
 		- [Differing Results Based on Gene ID](#differing-results-based-on-gene-id)
 		- [Union Size Must NOT Be Larger than Genome Size](#union-size-must-not-be-larger-than-genome-size)
 		- [Overflow in Excel](#overflow-in-excel)
@@ -55,8 +56,8 @@ The database includes the following information for each dataset:
 The app is designed to be quite straightforward and user-friendly, but brief instructions are provided here (and on the app itself) for convenience and clarity:
 
 - **Uploading User Gene Set (Set A)** - the app can take in a gene set via text input in the textbox, or by uploading a dataset (acceptable file formats are csv, tsv and txt). The app can take in Ensembl, Entrez and MGI symbol gene IDs, but can only parse one type at a time, so all gene IDs need to follow the same ID type, and you must correctly specify which ID type you are using for the matching to work properly. If you are pasting in IDs, they can be separated by tabs, spaces or commas. The app currently only supports MOUSE gene IDs. The overlap calculations are performed using the gene ID type that the user selects. Since gene ID types are not always 1:1, if you switch ID types you may get slightly different overlap results (see limitations below).
+- **Filtering Genes by Groups** - the app's database of genes can be grouped according to different categories (e.g. Microglia, Microglia Development, Inflammation, etc). By default, they are all selected, but you can deselect any desired groups to remove these genes from the enrichment calculation if they are not of interest. **Note that if you're selecting "All Genes in the Database" as your background gene set, this will affect the number of background genes used in the calculation.**
 - **Selecting A Background Gene Set (Set U)** - the enrichment analysis uses the Fisher's Exact Test to measure the overlap between your uploaded gene set and the database of microglia gene sets. To do this, it needs a background "universe" number of genes to calculate how significant the overlap is. You can either set the background number of genes to be all mouse genes *(All mm10 Genes)*, or all the genes currently in the database *(All Genes in the Database)*. Alternatively, if you have your own set of genes you want to upload, you can upload a custom set by selecting *Custom*. Format for the custom background set follows the user-uploaded gene set format.
-
 - **Uploading Background Gene Set** - If you do choose to upload a custom gene set, it must be large enough to serve as a background gene set (it should be larger than the largest gene set in the database (7266 genes) + your user uploaded gene set). See [here](#union-size-must-not-be-larger-than-genome-size) for clarification.
 - **Filtering & Disabling IDs** - the p-value slider can be used to filter your results for FDR significance level. There are also checkbox options to remove the specified columns from the output, which may be useful if your gene set is very long (this can tend to skew the rows of your table and make it hard to view).
 - **Querying Genes** - once you’re done toggling the various settings, you can click **Query Genes**, and the app will generate the resulting enrichment table, and you will be able to download the results as a csv file. Note that the results are only generated when the **Query Genes** button is clicked. If you make any further setting changes after generating results, recalculations will only come into effect when you click the button again to regenerate results.
@@ -85,6 +86,10 @@ The app is designed to be quite straightforward and user-friendly, but brief ins
 The intersection_ids is the original list of overlapping gene IDs, in the format you uploaded and selected for your genes. The 3 successive columns after try to map the gene ID to its corresponding alternate ID equivalents, if possible (therefore one of the columns will be redundant, as it will be in the same gene ID type as what you uploaded, and due to [mapping](#differing-results-based-on-gene-id) problems, wit is not fully complete). It is provided only for convenience to potentially lookup genes of interest faster. When reporting results, use the intersection_ids column for the most accurate results.
 
 ## Important Features/Limitations to Know:
+
+### Filtering the Genes by Groups May Affect Results
+
+As stated above, deselecting any of the gene groups available (via the checkboxes) will remove the associated genes. As this reduces the number of genes in the database, if you are using **"All Genes in the Database"** as your background gene set, this will change the number of background genes used to in the enrichment analysis. Additionally, you may notice certain associated gene lists will be removed as well, as they no longer contain any genes after filtering.
 
 ### Differing Results Based on Gene ID
 

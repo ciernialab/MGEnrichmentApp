@@ -25,7 +25,7 @@ gene set that is enriched, this could have important implications for the user\'
 <h5 style = "font-weight: bold">Filtering Genes by Groups</h5>
 <ul>
 <li>The genes in the database fall into several categories. By default they are all selected, but you can remove genes in certain groups from the database by delecting them in the checkboxes if they are not of interest.</li>
-<li><i>Note that this will affect the number of genes used in the database, and if you are using the "All Genes in the Database" option for the background gene set, this will affect enrichment calculations. Certain gene lists may also be removed depending on which groups are deselected.</i></li>
+<li><i>Note that this will affect the number of genes used in the database, and if you are using the "All Genes in the Database" option for the background gene set, this will affect enrichment calculations. </i></li>
 </ul>
 
 <h5 style = "font-weight: bold">Selecting Background Gene Set</h5>

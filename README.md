@@ -89,7 +89,7 @@ The intersection_ids is the original list of overlapping gene IDs, in the format
 
 ### Filtering the Genes by Groups May Affect Results
 
-As stated above, deselecting any of the gene groups available (via the checkboxes) will remove the associated genes. As this reduces the number of genes in the database, if you are using **"All Genes in the Database"** as your background gene set, this will change the number of background genes used to in the enrichment analysis. Additionally, you may notice certain associated gene lists will be removed as well, as they no longer contain any genes after filtering.
+As stated above, deselecting any of the gene groups available (via the checkboxes) will remove the associated genes. As this reduces the number of genes in the database, if you are using **"All Genes in the Database"** as your background gene set, this will change the number of background genes used to in the enrichment analysis. Each gene list is only assigned to one group.
 
 ### Differing Results Based on Gene ID
 
@@ -139,34 +139,9 @@ Alternatively, if you want the full results, you will either need to get the res
 
 ## Updating the Database
 
-If you want to build your own version of the app and need to update the gene lists used in the database, there are 3 types of datasets that can/should be updated.
-- mouse genome dataset (mouse_genes, dataframe)
-- Microglia Relevant Genes Dataset (masterlist, dataframe)
-- Final datasets used in the app (EnsemblList, entrezList, mgiList, which is a merging of the previous 2, by ensembl)
- There is a separate script attached (called NewGeneLists.R) that can be run to regenerate all these datasets, pulling from biomaRt and a manually curated spreadsheet of MG-relevant genes.
-
-To update the Microglia Relevant Genes Database itself - each row is a gene and make sure to include the following columns:
-ensembl_gene_id: all the ensembl IDs for your list
-- **mgi_symbol** - the corresponding mgi_symols for your list
-- **hgnc_symbol** - the corresponding human hgnc_symbols for your list
-- **entrezgene_id** - the corresponding entrez IDs for your list   
-- **listname** - a short and succinct name/tag for your list (what you might show on a plot to distinguish the list, needs to be unique for the list)
-- **description** - a longer description of what the genes in the list are (ie. DEGs from WT vs Mutant microglia)
-- **source** - paper citation for the list
-- **groups** - one of the following (or make your own new category!):
-	- *Neuropsychatic & Neurodevelopmental Disorders human brain*
-	- *Microglia Development*
-	- *Microglia*
-	- *ASD regulators*
-	- *inflammation*
-	- *ASD genetics*    
-
-- **Species** - the species the genelist was originally collected from (rat, human, mouse). All genes should be converted to Mouse IDs.         
-- **tissue** - tissue type or cell type used in the dataset (ie. brain or microglia)
-
+If you want to build your own version of the app and need to update the gene lists used in the database, you can consult the NewGeneLists.R script for an example on how to do this.
 
 If you have any further questions or concerns about the app and how to use it, you can contact the Ciernia Lab at ciernialab@gmail.com
-
 
 <!---- ## Info for Developers
 

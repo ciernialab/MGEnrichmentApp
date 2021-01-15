@@ -37,7 +37,7 @@ CBgreaterSTR <- CBgreaterSTR %>% select(gene.id)
 # get mouse ensemble data
 mouse <- useMart("ensembl", dataset = "mmusculus_gene_ensembl")
 
-# query ensemble and entrez ids - this is the dataset with all mouse genes
+# query ensemble  - this is the dataset with all mouse genes. It is also used for the background genes if all mm10 is selected in the app.
 mouse_genes <- getBM(attributes = c("ensembl_gene_id","mgi_symbol", "hgnc_symbol", "entrezgene_id"),
                      mart = mouse)
 
@@ -78,8 +78,8 @@ masterlist <- DataBasemm10
 #write out new R objects for the App. Include
 
 # save data output (only masterlist and mouse_genes, the other 3 are generated in app)
-#save(mouse_genes, masterlist,
- #    file = here("GeneLists.RData"))
+save(mouse_genes, masterlist,
+    file = here("GeneLists.RData"))
 
 
 

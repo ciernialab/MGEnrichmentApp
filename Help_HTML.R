@@ -2,6 +2,12 @@ displayHelp <- HTML('
 <p style="font-size:30px">
 <b>Welcome to the Ciernia Lab Microglia Enrichment Calculator!</b>
 </p>
+
+<p style="font-size:20px">
+Here we provide a short guide to using the app. For more detailed documentation, please visit the <u><a href="https://github.com/ciernialab/MGEnrichmentApp">GitHub repository</a>.</u>
+</p>
+<br>
+<br>
 <p>
 The calculator is quite simple; the user uploads the gene sets they want to test for enrichment. 
 The app then runs what is essentially a one-tailed Fishers Exact Test with the user\'s uploaded 
@@ -16,10 +22,11 @@ gene set that is enriched, this could have important implications for the user\'
 <br>
 <h5 style = "font-weight: bold">Uploading Gene Sets</h5>
 <ul>
-<li>The app can take in a gene set via text input in the textbox, or by uploading a dataset (acceptable file formats are csv, tsv and txt)</li>
+<li>The app can take in a gene set via text input in the textbox, or by uploading a dataset (acceptable file formats are csv, tsv and txt, and files should only have one column containing the genes, with no header).</li>
 <li>The app can take in Ensembl, Entrez and MGI symbol gene IDs, but can only parse one type at a time, so all gene IDs need to follow the same ID type, and you must correctly specify which ID type you are using for the matching to work properly.</li>
 <li>If possible, it is recommended to use Ensembl IDs, as this is what was originally used to compile our gene set lists</li>
 <li> If you are pasting in IDs, they can be separated by tabs, spaces or commas.</li>
+<li><b>Note that the database was curated using mouse genes, and any gene IDs uploaded by the user should also only be mouse IDs.</b></li>
 </ul>
 
 <h5 style = "font-weight: bold">Filtering Genes by Groups</h5>
@@ -31,12 +38,13 @@ gene set that is enriched, this could have important implications for the user\'
 <h5 style = "font-weight: bold">Selecting Background Gene Set</h5>
 <ul>
 <li>You can either set the background number of genes to be all mouse genes <i>(All mm10 Genes)</i>, or all the genes currently in the database <i>(All Genes in the Database)</i>.</li>
-<li> You can also upload a custom set by selecting <i>Custom</i>. Format for the custom background set follows the user-uploaded gene set format.</li>
+<li> You can also upload a custom set by selecting <i>Custom</i>.</li>
 </ul>
 
 <h5 style = "font-weight: bold">Uploading Background Gene Set</h5>
 <ul>
-<li>Any custom uploaded background gene sets must be large enough to serve as a background gene set (it should be larger than the largest gene set in the database (7266 genes) + your user uploaded gene set). See online documentation for more information. </li>
+<li>Any custom uploaded background gene sets must be large enough to serve as a background gene set (it should be larger than the largest gene set in the database (7266 genes) + your user uploaded gene set). See <u><a href="https://github.com/ciernialab/MGEnrichmentApp">online documentation</a></u> for more information.</li>
+<li>Format for the custom background set follows the user-uploaded gene set format of one column only, with no header.</li>
 
 </ul>
 <h5 style = "font-weight: bold">Filtering & Disabling IDs</h5>
@@ -85,7 +93,7 @@ gene set that is enriched, this could have important implications for the user\'
 The <b>intersection_ids</b> is the original list of overlapping gene IDs, in the format you uploaded and selected for your genes. The 3 successive columns after try to map the gene ID to its corresponding alternate ID equivalents, if possible (therefore one of the columns will be redundant, as it will be in the same gene ID type as what you uploaded, and due to [mapping](#differing-results-based-on-gene-id) problems, it is not fully complete). It is provided only for convenience to potentially lookup genes of interest faster. When reporting results, use the intersection_ids column for the most accurate results, and convert to other ID types through other means, if necessary.
 <br>
 <br>
-  For more details, please visit the online documentation on the GitHub <a href="https://github.com/ciernialab/MGEnrichmentApp">repository</a>.
+
   <br>
   <br>
 ')

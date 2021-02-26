@@ -44,7 +44,7 @@ ui <- dashboardPage(
     
     
     # Application title
-    dashboardHeader(title = "Microglia Gene Set Enrichment Calculator", titleWidth = 430),
+    dashboardHeader(title = "Microglia Gene List Enrichment Calculator", titleWidth = 430),
     
     # Sidebar Layout
     # this contains all the UI for the sidebar
@@ -354,7 +354,7 @@ server <- function(input, output, session) {
         
         # Reading Custom Uploaded Background Lists -----------
         
-        #similar to the user uploaded gene set functions above.
+        #similar to the user uploaded gene list functions above.
         backgroundQueryFile <- reactive({
             
             ext <- tools::file_ext(input$fileBackgroundID$name)
@@ -375,7 +375,7 @@ server <- function(input, output, session) {
             backgroundQueryFile()
         }
         #browser()
-        #counts number of entries in uploaded background set, 
+        #counts number of entries in uploaded background list, 
         #to be used in genomesize of overlap function
         backgroundQuerySize <- length(unique(backgroundQueryDecide))
         
@@ -398,8 +398,8 @@ server <- function(input, output, session) {
         # if I reformatted on a second column, which is why I drop the previous column)
         results$FDR <- as.numeric(formatC(x = as.numeric(results$FDRdrop), format = "E"))
         
-        #gets gene set list information
-        geneSetInfo <- masterlistFiltered %>%
+        #gets gene list information
+        geneListInfo <- masterlistFiltered %>%
             dplyr::select(-ensembl_gene_id, -mgi_symbol, -hgnc_symbol, -entrezgene_id) %>% 
             distinct()
         
@@ -407,7 +407,7 @@ server <- function(input, output, session) {
         #p$description[91] <- "differential gene expression polyI:C MIA on GD14, whole brain microglia P0"
         
         #merge the result dataframe and list information dataframe together
-        merged_results <- merge(results, geneSetInfo, by=c("listname"), all.x=T)
+        merged_results <- merge(results, geneListInfo, by=c("listname"), all.x=T)
         merged_results <- unique(merged_results)
         
         #this filters the dataframe to remove any values <= user input p value

@@ -19,6 +19,7 @@ library(vroom)
 library(DT)
 library(shinydashboard)
 library(BiocManager)
+library(readxl)
 options(repos = BiocManager::repositories())
 getOption("repos")
 
@@ -31,6 +32,10 @@ getOption("repos")
 
 #load in datasets from here:
 load(file="GeneLists.RData")
+toyDatasetDown <- read_xlsx(here("Toy_Dataset_Input_and_Output.xlsx"), 
+                            sheet = "Downregulated_Genes_Dataset")
+toyDatasetUp <- read_xlsx(here("Toy_Dataset_Input_and_Output.xlsx"), 
+                            sheet = "Upregulated_Genes_Dataset")
 #masterlist <- dplyr::select(masterlist, -entrezgene_id, -mgi_symbol, -hgnc_symbol)
 
 
@@ -54,7 +59,10 @@ ui <- dashboardPage(
                      textAreaInput("txtGeneID", label = "Input your genes of 
                           interest here (must all be the same gene ID format)",
                                    placeholder = "CxCl2, 344521, ENSMUSG00000000202,..."),
-                     fileInput("fileGeneID", "or upload your gene list here", accept = c(".csv", ".tsv", ".txt")),
+                     fileInput("fileGeneID", "or upload your gene list here (or try out our sample datasets below)", accept = c(".csv", ".tsv", ".txt")),
+                     div(style="display: inline-block;vertical-align:left; height:20px; width: 180px;",actionButton("downregToy", label = "Downregulated Sample")),
+                     div(style="display: inline-block;vertical-align:left; height: 20px; width: 180px;",actionButton("upregToy", "Upregulated Sample")),
+                     br(),
                      radioButtons("typeID", "Which gene ID are you using?",
                                   choices = c("Ensembl" = "ensembl_gene_id",
                                               "Entrez" = "entrezgene_id",
@@ -133,6 +141,15 @@ ui <- dashboardPage(
 # https://shiny.rstudio.com/tutorial/written-tutorial/lesson6/
 
 server <- function(input, output, session) {
+    
+    downregPaste <- reactive(
+        updateTextInput(session, "txtGeneID", value = toString(paste(unlist(toyDatasetDown)))))
+    observeEvent(input$downregToy, downregPaste())
+    upregPaste <- reactive(
+        updateTextInput(session, "txtGeneID", value = toString(paste(unlist(toyDatasetUp)))))
+    observeEvent(input$upregToy, upregPaste())
+
+    
     
     # Switch List Function
     # switch function is used to change which list is used, depending on user input

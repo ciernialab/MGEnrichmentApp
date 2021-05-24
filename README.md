@@ -62,6 +62,9 @@ The app is designed to be quite straightforward and user-friendly, but brief ins
 - **Filtering & Disabling IDs** - the p-value slider can be used to filter your results for FDR significance level. There are also checkbox options to remove the specified columns from the output, which may be useful if your gene set is very long (this can tend to skew the rows of your table and make it hard to view).
 - **Querying Genes** - once you’re done toggling the various settings, you can click **Query Genes**, and the app will generate the resulting enrichment table, and you will be able to download the results as a csv file. Note that the results are only generated when the **Query Genes** button is clicked. If you make any further setting changes after generating results, recalculations will only come into effect when you click the button again to regenerate results.
 - **Downloading Results** - simply click the "Download Results" button to export your results to a csv file. Note that the results download as is (whatever filtering settings you've used carry over - what you see is what you get).
+= **Toy Datasets** - There are two toy datasets available which you can use to try out the enrichment analysis: **Downregulated Sample** (which contain IDs of genes previously found to be downregulated in ASD) and **Upregulated Sample** (which contain IDs of genes previously found to be upregulated in ASD).
+You can try them both out by clicking on their respective buttons and querying the database.
+Or, you can download the datasets and their output results directly [here.](https://github.com/ciernialab/MGEnrichmentApp/blob/main/Toy_Dataset_Input_and_Output.xlsx)
 
 ## Interpreting Results
 - **listname** - name of the gene set that is being compared against.

@@ -69,6 +69,13 @@ gene list that is enriched, this could have important implications for the user\
 <li>Note that the results download as is (whatever filtering settings you\'ve used carry over - what you see is what you get).</li>
 </ul>
 
+<h5 style = "font-weight: bold">Toy Datasets</h5>
+<ul>
+<li>There are two toy datasets available to try out the enrichment analysis: <b>Downregulated Sample</b> (which contain IDs of several genes previously found to be downregulated in ASD) and <b>Upregulated Sample</b> (which contain IDs of genes previously found to be upregulated in ASD). </li>
+<li>You can try them out by clicking on the respective buttons, then querying the database. </li>
+<li>You can also download a spreadsheet of both datasets and their outputs <u><a href="https://github.com/ciernialab/MGEnrichmentApp/blob/main/Toy_Dataset_Input_and_Output.xlsx">from the GitHub repository</a>.</u></li>
+</ul>
+
 <h3 style = "font-size: 20px;font-weight: bold">Interpreting Results</h3>
 <ul>
 <li><b>listname</b> - name of the gene list that is being compared against.</li>

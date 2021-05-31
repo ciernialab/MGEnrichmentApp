@@ -34,10 +34,11 @@ getOption("repos")
 load(file="GeneLists.RData")
 
 #toydataset with ASD>Ctrl genes and ASD<Ctrl genes:
-toyDatasetDown <- read_xlsx(here("Toy_Dataset_Input_and_Output.xlsx"), 
-                            sheet = "Downregulated_Genes_Dataset")
 toyDatasetUp <- read_xlsx(here("Toy_Dataset_Input_and_Output.xlsx"), 
-                            sheet = "Upregulated_Genes_Dataset")
+                          sheet = "ASD>CTRL_DEGs_Dataset")
+toyDatasetDown <- read_xlsx(here("Toy_Dataset_Input_and_Output.xlsx"), 
+                            sheet = "ASD<CTRL_DEGs_Dataset")
+
 #masterlist <- dplyr::select(masterlist, -entrezgene_id, -mgi_symbol, -hgnc_symbol)
 
 

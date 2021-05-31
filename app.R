@@ -32,6 +32,8 @@ getOption("repos")
 
 #load in datasets from here:
 load(file="GeneLists.RData")
+
+#toydataset with ASD>Ctrl genes and ASD<Ctrl genes:
 toyDatasetDown <- read_xlsx(here("Toy_Dataset_Input_and_Output.xlsx"), 
                             sheet = "Downregulated_Genes_Dataset")
 toyDatasetUp <- read_xlsx(here("Toy_Dataset_Input_and_Output.xlsx"), 
@@ -141,10 +143,13 @@ ui <- dashboardPage(
 # https://shiny.rstudio.com/tutorial/written-tutorial/lesson6/
 
 server <- function(input, output, session) {
-    
+    # the downregPaste/upregPaste extracts the genes from the xlsx file and pastes it into
+    # the textbox for user. The observeEvent function monitors the Toy dataset
+    # buttons, and if either is clicked, it calls the corresponding function
     downregPaste <- reactive(
         updateTextInput(session, "txtGeneID", value = toString(paste(unlist(toyDatasetDown)))))
     observeEvent(input$downregToy, downregPaste())
+    
     upregPaste <- reactive(
         updateTextInput(session, "txtGeneID", value = toString(paste(unlist(toyDatasetUp)))))
     observeEvent(input$upregToy, upregPaste())

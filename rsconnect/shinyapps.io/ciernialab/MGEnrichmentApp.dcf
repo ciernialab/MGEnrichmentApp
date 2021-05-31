@@ -5,9 +5,9 @@ account: ciernialab
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3205213
-bundleId: 4635093
+bundleId: 4658444
 url: https://ciernialab.shinyapps.io/MGEnrichmentApp/
-when: 1621894859.4288
+when: 1622423409.86157
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: Genelists.in.mm10Database.11.21.2020.csv|Microglia.Mouse.GeneListDatabase.11.21.2020.csv|Moregenes.csv|NewGeneLists.R|README.md|www/.DS_Store

@@ -7,6 +7,7 @@
 	- [Basic Functionality/Explanation](#basic-functionalityexplanation)
 	- [The mm10 Database](#the-mm10-database)
 	- [How to Use the App](#how-to-use-the-app)
+	- [Toy Datasets](#toy-datasets)
 	- [Interpreting Results](#interpreting-results)
 	- [Important Features/Limitations to Know:](#important-featureslimitations-to-know)
 	  - [Filtering the Genes by Groups May Affect Results](#filtering-the-genes-by-groups-may-affect-results)
@@ -14,6 +15,7 @@
 		- [Union Size Must NOT Be Larger than Genome Size](#union-size-must-not-be-larger-than-genome-size)
 		- [Overflow in Excel](#overflow-in-excel)
 	- [Updating the Database](#updating-the-database)
+	- [References](#references)
 
 <!-- /TOC -->
 This is the repository for the [Ciernia Lab's Microglia Gene Set Enrichment Calculator](https://ciernialab.shinyapps.io/MGEnrichmentApp/), an application built using the R Shiny package.
@@ -62,7 +64,12 @@ The app is designed to be quite straightforward and user-friendly, but brief ins
 - **Filtering & Disabling IDs** - the p-value slider can be used to filter your results for FDR significance level. There are also checkbox options to remove the specified columns from the output, which may be useful if your gene set is very long (this can tend to skew the rows of your table and make it hard to view).
 - **Querying Genes** - once you’re done toggling the various settings, you can click **Query Genes**, and the app will generate the resulting enrichment table, and you will be able to download the results as a csv file. Note that the results are only generated when the **Query Genes** button is clicked. If you make any further setting changes after generating results, recalculations will only come into effect when you click the button again to regenerate results.
 - **Downloading Results** - simply click the "Download Results" button to export your results to a csv file. Note that the results download as is (whatever filtering settings you've used carry over - what you see is what you get).
-= **Toy Datasets** - There are two toy datasets available which you can use to try out the enrichment analysis: **Downregulated Sample** (which contain IDs of genes previously found to be downregulated in ASD) and **Upregulated Sample** (which contain IDs of genes previously found to be upregulated in ASD).
+
+## Toy Datasets
+There are two toy datasets available to try out the enrichment analysis. Both contain differentially expressed genes from several papers comparing human brain ASD to controls, where expression levels were higher in ASD compared to controls **(ASD>Ctrl DEGs)** or lower **(ASD<Ctrl DEGs)**.
+
+The datasets were generated from four previously published genelists (see [references](#references)). All four identified immune, and microglial, gene expression as altered in ASD brain. We took the published gene lists from these papers, divided them into genes with either increased or decreased expression in ASD and then overlapped the four sets to identify genes consistently identified in at least 3 out of the 4 datasets. Gene lists were then converted to mouse Ensembl Identifiers using biomart. 
+
 You can try them both out by clicking on their respective buttons and querying the database.
 Or, you can download the datasets and their output results directly [here.](https://github.com/ciernialab/MGEnrichmentApp/blob/main/Toy_Dataset_Input_and_Output.xlsx)
 
@@ -145,6 +152,13 @@ Alternatively, if you want the full results, you will either need to get the res
 If you want to build your own version of the app and need to update the gene lists used in the database, you can consult the NewGeneLists.R script for an example on how to do this.
 
 If you have any further questions or concerns about the app and how to use it, you can contact the Ciernia Lab at ciernialab@gmail.com
+
+## References
+- Gupta S, Ellis SE, Ashar FN, Moes A, Bader JS, Zhan J, et al. Transcriptome analysis reveals dysregulation of innate immune response genes and neuronal activity-dependent genes in autism. Nat Commun [Internet]. 2014;5:5748. Available from: http://www.nature.com/doifinder/10.1038/ncomms6748
+- Parikshak NN, Swarup V, Belgard TG, Irimia M, Ramaswami G, Gandal MJ, et al. Genome-wide changes in lncRNA, splicing, and regional gene expression patterns in autism. Nature [Internet]. 2016 Dec 5 [cited 2017 Jul 18];540(7633):423–7. Available from: https://www.ncbi.nlm.nih.gov/pubmed/27919067%5Cnhttp://www.nature.com/nature/journal/vaop/ncurrent/pdf/nature20612.pdf
+- Gandal MJ, Zhang P, Hadjimichael E, Walker RL, Chen C, Liu S, et al. Transcriptome-wide isoform-level dysregulation in ASD, schizophrenia, and bipolar disorder. Science (80- ) [Internet]. 2018 Dec 14 [cited 2018 Dec 18];362(6420):eaat8127. Available from: http://www.ncbi.nlm.nih.gov/pubmed/30545856
+- Gandal MJ, Haney J, Parikshak N, Leppa V, Horvath S, Geschwind DH. Shared molecular neuropathology across major psychiatric disorders parallels polygenic overlap. Science (80- ) [Internet]. 2018;693(February):693–7. Available from: http://biorxiv.org/content/early/2016/02/18/040022.abstract
+
 
 <!---- ## Info for Developers
 

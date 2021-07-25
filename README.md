@@ -5,7 +5,7 @@
 
 - [MGEnrichmentApp](#mgenrichmentapp)
 	- [Basic Functionality/Explanation](#basic-functionalityexplanation)
-	- [The mm10 Database](#the-mm10-database)
+	- [The Database](#the-database)
 	- [How to Use the App](#how-to-use-the-app)
 	- [Toy Datasets](#toy-datasets)
 	- [Interpreting Results](#interpreting-results)

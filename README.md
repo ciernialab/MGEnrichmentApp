@@ -156,7 +156,7 @@ Alternatively, if you want the full results, you will either need to get the res
 
 If you want to build your own version of the app and need to update the gene lists used in the database, you can consult the NewGeneLists.R script for an example on how to do this.
 
-If you have any further questions or concerns about the app and how to use it, you can contact the Ciernia Lab at ciernialab@gmail.com
+If you have any further questions or concerns about the app and how to use it, you can contact the Dr. Ciernia at annie.ciernia@ubc.ca or submit a github ticket on this hub.
 
 ## References
 - Gupta S, Ellis SE, Ashar FN, Moes A, Bader JS, Zhan J, et al. Transcriptome analysis reveals dysregulation of innate immune response genes and neuronal activity-dependent genes in autism. Nat Commun [Internet]. 2014;5:5748. Available from: http://www.nature.com/doifinder/10.1038/ncomms6748

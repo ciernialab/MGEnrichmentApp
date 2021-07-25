@@ -28,15 +28,18 @@ The calculator was built to enable those who may be less proficient in statistic
 
 We use the GeneOverlap Function (http://bioconductor.org/packages/release/bioc/html/GeneOverlap.html) to compare the user input list to each list in the database. Given the two gene lists, we test the significance of their overlap in comparison with a genomic background (specified "background universe" of genes) using a one-tailed Fisher's Exact Test. The null hypothesis is that the odds ratio is no larger than 1. The alternative is that the odds ratio is larger than 1.0. The user input list is compared to each list in the database in an independent test and then all tests are corrected for multiple comparisons using a False Discovery Rate (FDR) of .05.
 
-## The mm10 Database
+## The Databases: mouse and human
 
-The database of gene lists has been manually curated to include a wide assortment of microglial relevant gene lists collected from multiple treatments, disease states, etc in microglia or brain from mouse, human or rat. All gene IDs are converted to mouse, so if you want to compare to your human gene list you need to convert to mouse gene IDs first.
-A summary of the database including papers, lists and numbers of genes is included here as: [Genelists.in.mm10Database.11.21.2020.csv](https://github.com/ciernialab/MGEnrichmentApp/blob/main/Genelists.in.mm10Database.11.21.2020.csv)
+The database of gene lists has been manually curated to include a wide assortment of microglial relevant gene lists collected from multiple treatments, disease states, etc in microglia or brain from mouse, human or rat. For the mouse database, all gene ids were converted to mouse if originally in human or rat. For the human database, all gene ids were converted to human if originally in mouse or rat.
 
-The database includes the following information for each dataset:
+A summary of the database including papers, lists and numbers of genes is included here as: 
+Mouse: [MouseMasterSummary.final.csv](https://github.com/ciernialab/MGEnrichmentApp/blob/main/MouseMasterSummary.final.csv)
+Human: [HumanMasterSummary.final.csv](https://github.com/ciernialab/MGEnrichmentApp/blob/main/HumanMasterSummary.final.csv)
+
+The database includes the following information for each genelist within each dataset:
+- **listname** - shorted description of the gene list
 - **ensembl_gene_id** - all the ensembl IDs in the list
-- **mgi_symbol** - the corresponding mgi_symols in the list
-- **hgnc_symbol** - the corresponding human hgnc_symbols in the list
+- **mgi_symbol or hgnc_symbol** - the corresponding gene symbols in the list
 - **entrezgene_id** - the corresponding entrez IDs in the list   
 - **listname** - a short and succinct name/tag for the list
 - **description** - a longer description of what the genes in the list are (e.g. DEGs from WT vs Mutant microglia)
@@ -51,6 +54,8 @@ The database includes the following information for each dataset:
 
 - **Species** - the species the list was originally collected from (rat, human, mouse). All genes are converted to Mouse IDs.         
 - **tissue** - tissue type or cell type used in the dataset (ie. brain or microglia)
+- **full.source** - full paper citation including the doi link
+
 
 
 ## How to Use the App
@@ -83,7 +88,7 @@ Or, you can download the datasets and their output results directly [here.](http
 - **inBinA** - number of genes in both the current database gene set and the user uploaded gene set.
 - **intersection_IDs** - the direct list of overlapping gene IDs (inBinA). This will be in the gene ID type that you have selected, and is the original overlap list, so use this for final results.
 - **intersection_ensembl** - the intersection_IDs, converted to ensembl
-- **intersection_mgi_symbol** - the intersection_IDs, converted to MGI symbols
+- **intersection_mgi_symbol or intersection_hgnc_symbol** - the intersection_IDs, converted to symbols
 - **intersection_entrez** - the intersection_IDs, converted to entrez
 - **FDR** - false discovery rate correction value.
 - **description** - brief description of gene set.
@@ -91,7 +96,7 @@ Or, you can download the datasets and their output results directly [here.](http
 - **groups** - gene set category grouping.
 - **Species** - the original species used to generate the list in the database. All gene IDs were converted to mouse IDs using BioMart. For example, gene lists in human brain were converted from hgnc_symbols to mouse ensembl IDs before inclusion in the database.
 - **tissue** - the original tissue used to generate the dataset
-
+- **full.source** - full citation with doi
 
 The intersection_ids is the original list of overlapping gene IDs, in the format you uploaded and selected for your genes. The 3 successive columns after try to map the gene ID to its corresponding alternate ID equivalents, if possible (therefore one of the columns will be redundant, as it will be in the same gene ID type as what you uploaded, and due to [mapping](#differing-results-based-on-gene-id) problems, wit is not fully complete). It is provided only for convenience to potentially lookup genes of interest faster. When reporting results, use the intersection_ids column for the most accurate results.
 

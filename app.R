@@ -74,7 +74,7 @@ ui <- dashboardPage(
                      checkboxGroupInput("groupFilterID", "Which gene list groups are you interested in?", inline = TRUE,
                                         choiceNames = unique(masterlist$groups),
                                         choiceValues = unique(masterlist$groups),
-                                        selected = unique(masterlist$groups)),
+                                        selected = c("Microglia", "Microglia Development", "inflammation")),
                      radioButtons("background", "Set the background query:",
                                   choices = c("All mm10 Genes" = "reference",
                                               "All Genes in the Database" = "intersection",
@@ -90,7 +90,7 @@ ui <- dashboardPage(
                                         choiceNames = c("Intersection IDs","Ensembl", "MGI Symbol", "Entrez"),
                                         choiceValues = c("intersection_IDs", "intersection_ensembl", "intersection_mgi_symbol", "intersection_entrez"), 
                                         selected = NULL),
-                     sliderInput("pval", "Change Minimum FDR-value (1.0 means no filtering):", min = 0.01, max = 1.00, value = 1.00, step = 0.01),
+                     sliderInput("pval", "Change Minimum FDR-value (1.0 means no filtering):", min = 0.01, max = 1.00, value = 0.05, step = 0.01),
                      div(style="display: inline-block;vertical-align:left; height:120px; width: 120px;",actionButton("searchGene", label = "Query Genes")),
                      div(style="display: inline-block;vertical-align:left; height: 120px; width: 120px;",downloadButton("dwnld", "Download Results"))
     ),
@@ -438,8 +438,8 @@ server <- function(input, output, session) {
         merged_results <- merged_results %>% 
             filter(FDRdrop <= input$pval) %>% 
             #drops the dummy FDR column
-            dplyr::select(-FDRdrop)
-        
+            dplyr::select(-FDRdrop) %>% 
+            relocate(FDR, .after = pvalue)
         return(merged_results)
     })
     
@@ -454,7 +454,7 @@ server <- function(input, output, session) {
     run_calc <- eventReactive(input$searchGene, remove_ids())
     
     #renders the table
-    output$enrichmentTable <- DT::renderDataTable(datatable(run_calc(), options = list("lengthMenu"=c(10, 25, 50, 100, 200), "scrollX" = TRUE))) #%>% 
+    output$enrichmentTable <- DT::renderDataTable(datatable(run_calc(), options = list("lengthMenu"=c(10, 25, 50, 100, 200), "scrollX" = TRUE, "order" = list(list(3, "asc"))))) #%>% 
     #formatStyle("intersection", lineHeight='80%'))
     
     # Download Results --------------------------------------------------------

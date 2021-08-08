@@ -97,7 +97,7 @@ gene list that is enriched, this could have important implications for the user\
 <li><b>species</b> - the species the list was originally collected from (rat, human, mouse). All genes are converted to Mouse IDs.</li>
 <li><b>tissue</b> - tissue type or cell type used in the dataset (ie. brain or microglia).</li>
 </ul>
-The <b>intersection_ids</b> is the original list of overlapping gene IDs, in the format you uploaded and selected for your genes. The 3 successive columns after try to map the gene ID to its corresponding alternate ID equivalents, if possible (therefore one of the columns will be redundant, as it will be in the same gene ID type as what you uploaded, and due to [mapping](#differing-results-based-on-gene-id) problems, it is not fully complete). It is provided only for convenience to potentially lookup genes of interest faster. When reporting results, use the intersection_ids column for the most accurate results, and convert to other ID types through other means, if necessary.
+The <b>intersection_ids</b> is the original list of overlapping gene IDs, in the format you uploaded and selected for your genes. The 3 successive columns after try to map the gene ID to its corresponding alternate ID equivalents, if possible (therefore one of the columns will be redundant, as it will be in the same gene ID type as what you uploaded, and due to <u><a href="https://github.com/ciernialab/MGEnrichmentApp#differing-results-based-on-gene-id">mapping problems</a></u>, it is not fully complete). It is provided only for convenience to potentially lookup genes of interest faster. When reporting results, use the intersection_ids column for the most accurate results, and convert to other ID types through other means, if necessary.
 <br>
 <br>
 

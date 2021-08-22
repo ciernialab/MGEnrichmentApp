@@ -15,7 +15,7 @@ library(tidyverse)
 #mouse.sum = mouse summary (no gene ids)
 #human.sum = human summary (no gene ids)
 ##################################################################################
-load("Mouse_Human_GenelistDatabase2021.RData")
+load("Mouse_Human_GenelistDatabaseAugust2021.RData")
 
 
 ##################################################################################
@@ -26,35 +26,6 @@ load("Mouse_Human_GenelistDatabase2021.RData")
 #[9] "Species"         "full.source"    
 names(human.master3)
 names(mouse.master3)
-
-
-
-#remove duplicates in database:
-human.master3 <- human.master3 %>% filter(listname != "ASD<Ctrl") %>%
-  filter(listname != "ASD>Ctrl") %>%
-  filter(listname != "BD<Ctrl") %>%
-  filter(listname != "BD>Ctrl") %>%
-  filter(listname != "SCZ<Ctrl") %>%
-  filter(listname != "SCZ>Ctrl")
-
-mouse.master3 <- mouse.master3 %>% filter(listname != "ASD<Ctrl") %>%
-  filter(listname != "ASD>Ctrl") %>%
-  filter(listname != "BD<Ctrl") %>%
-  filter(listname != "BD>Ctrl") %>%
-  filter(listname != "SCZ<Ctrl") %>%
-  filter(listname != "SCZ>Ctrl")
-
-#regenerate summaries
-mouse.sum <- mouse.master3 %>% 
-  group_by(listname,description,source,groups,tissue,Species,full.source) %>% 
-  summarize(ensemble.genes = n())
-
-#generate new summary file
-human.sum <- human.master3 %>% distinct() %>%
-  group_by(listname,description,source,groups,tissue,Species,full.source) %>% 
-  summarize(ensemble.genes = n())
-
-save(human.master3, mouse.master3, mouse.sum, human.sum, file="Mouse_Human_GenelistDatabaseAugust2021.RData")
 
 
 

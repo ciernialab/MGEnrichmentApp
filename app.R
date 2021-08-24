@@ -31,7 +31,8 @@ getOption("repos")
 # ensemblList, entrezList, mgiList - (the MG-relevant genes sorted into gene lists) for each respective gene ID. These are generated in the app
 
 #load in datasets from here:
-load(file="GeneLists.RData")
+load(file="Mouse_Human_GenelistDatabaseAugust2021.RData")
+load(file="ASDvsCtrl_Human.Mouse.ToyDatasets.RData")
 
 #toydataset with ASD>Ctrl genes and ASD<Ctrl genes:
 toyDatasetUp <- read_xlsx(here("Toy_Dataset_Input_and_Output.xlsx"), 
@@ -41,7 +42,7 @@ toyDatasetDown <- read_xlsx(here("Toy_Dataset_Input_and_Output.xlsx"),
 
 #masterlist <- dplyr::select(masterlist, -entrezgene_id, -mgi_symbol, -hgnc_symbol)
 
-
+#
 # Designing User Interface ---------------------------------------------------------------
 # this section describes all the graphical user interface of the app
 
@@ -59,6 +60,9 @@ ui <- dashboardPage(
     # the different elements are self-explanatory
     dashboardSidebar(width = 430,
                      tags$style(".skin-blue .sidebar a { color: #444; }"),
+                     radioButtons("databaseType", "Select which database to query from",
+                                  choices = c("Mouse" = "mouse",
+                                              "Human" = "human")),
                      textAreaInput("txtGeneID", label = "Input your genes of 
                           interest here (must all be the same gene ID format)",
                                    placeholder = "CxCl2, 344521, ENSMUSG00000000202,..."),
@@ -155,6 +159,11 @@ server <- function(input, output, session) {
     upregPaste <- reactive(
         updateTextInput(session, "txtGeneID", value = toString(paste(unlist(toyDatasetUp)))))
     observeEvent(input$upregToy, upregPaste())
+
+    
+
+    # Switch Database Used 
+    switchSpecies <- reactive()
 
     
     

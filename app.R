@@ -40,7 +40,8 @@ toyDatasetUp <- read_xlsx(here("Toy_Dataset_Input_and_Output.xlsx"),
 toyDatasetDown <- read_xlsx(here("Toy_Dataset_Input_and_Output.xlsx"), 
                             sheet = "ASD<CTRL_DEGs_Dataset")
 
-#masterlist <- dplyr::select(masterlist, -entrezgene_id, -mgi_symbol, -hgnc_symbol)
+# set default masterlist df to use for generating group choices in the UI
+masterlist <- mouse.master3
 
 #
 # Designing User Interface ---------------------------------------------------------------
@@ -163,9 +164,11 @@ server <- function(input, output, session) {
     
 
     # Switch Database Used 
-    switchSpecies <- reactive()
-
-    
+     switchSpecies <- reactive(
+         switch(input$databaseType,
+                Mouse = "mouse",
+                Human = "human")
+         )
     
     # Switch List Function
     # switch function is used to change which list is used, depending on user input
@@ -277,6 +280,14 @@ server <- function(input, output, session) {
     # Could benefit from splitting into smaller helper functions...
     result_calculation <- reactive({
         
+        # Switch masterlist and speciesGenes based on user input
+        matchSpecies <- if (switchSpecies() == "mouse") {
+            masterlist <- mouse.master3
+            speciesGenes <- mouse_genes
+        } else if (switchSpecies() == "human") {
+            masterlist <- human.master3
+            speciesGenes <- human_genes
+        }
         
         # Filter Masterlist by User-Specified Groups ------------------------------
         

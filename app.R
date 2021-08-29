@@ -164,11 +164,17 @@ server <- function(input, output, session) {
     
 
     # Switch Database Used 
-     switchSpecies <- reactive(
+     switchSpecies <- reactive({
          switch(input$databaseType,
-                Mouse = "mouse",
-                Human = "human")
-         )
+                mouse = "mouse",
+                human = "human")
+     })
+     
+     switchSpeciesSymbol <- reactive({
+         switch(input$databaseType,
+                mouse = "mgi_symbol",
+                human = "hgnc_symbol")
+     })
     
     # Switch List Function
     # switch function is used to change which list is used, depending on user input
@@ -444,7 +450,7 @@ server <- function(input, output, session) {
         
         #gets gene list information
         geneListInfo <- masterlistFiltered %>%
-            dplyr::select(-ensembl_gene_id, -mgi_symbol, -hgnc_symbol, -entrezgene_id) %>% 
+            dplyr::select(-ensembl_gene_id, -mgi_symbol, -entrezgene_id) %>% 
             distinct()
         
         #change one of the gene list names to be correct

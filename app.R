@@ -28,17 +28,15 @@ getOption("repos")
 # there are 5 key datasets used in this script
 # mouse_genes - contains all the mouse genes
 # masterlist - contains all the MG-relevant genes, and their corresponding gene IDs
-# ensemblList, entrezList, mgiList - (the MG-relevant genes sorted into gene lists) for each respective gene ID. These are generated in the app
+# ensemblList, entrezList, geneSymbolList - (the MG-relevant genes sorted into gene lists) for each respective gene ID. These are generated in the app
 
 #load in datasets from here:
 load(file="Mouse_Human_GenelistDatabaseAugust2021.RData")
 load(file="ASDvsCtrl_Human.Mouse.ToyDatasets.RData")
 
 #toydataset with ASD>Ctrl genes and ASD<Ctrl genes:
-toyDatasetUp <- read_xlsx(here("Toy_Dataset_Input_and_Output.xlsx"), 
-                          sheet = "ASD>CTRL_DEGs_Dataset")
-toyDatasetDown <- read_xlsx(here("Toy_Dataset_Input_and_Output.xlsx"), 
-                            sheet = "ASD<CTRL_DEGs_Dataset")
+toyDatasetUp <- mouse.ASDup.2.3
+toyDatasetDown <- mouse.ASDdown.2.3
 
 # set default masterlist df to use for generating group choices in the UI
 masterlist <- mouse.master3
@@ -75,7 +73,7 @@ ui <- dashboardPage(
                      radioButtons("typeID", "Which gene ID are you using?",
                                   choices = c("Ensembl" = "ensembl_gene_id",
                                               "Entrez" = "entrezgene_id",
-                                              "MGI Symbol" = "mgi_symbol")),
+                                              "Gene Symbol" = "gene_symbol")),
                      checkboxGroupInput("groupFilterID", "Which gene list groups are you interested in?", inline = TRUE,
                                         choiceNames = unique(masterlist$groups),
                                         choiceValues = unique(masterlist$groups),
@@ -92,9 +90,9 @@ ui <- dashboardPage(
                                                     placeholder = "CxCl2, 344521, ENSMUSG00000000202,..."),
                                       fileInput("fileBackgroundID", "or upload your background list here", accept = c(".csv", ".tsv", ".txt"))),
                      checkboxGroupInput("displayID", "Disable Intersection Gene IDs?", inline = TRUE,
-                                        choiceNames = c("Intersection IDs","Ensembl", "MGI Symbol", "Entrez"),
-                                        choiceValues = c("intersection_IDs", "intersection_ensembl", "intersection_mgi_symbol", "intersection_entrez"), 
-                                        selected = NULL),
+                                        choiceNames = c("Intersection IDs","Ensembl", "Gene Symbol", "Entrez"),
+                                        choiceValues = c("intersection_IDs", "intersection_ensembl", "intersection_gene_symbol", "intersection_entrez"), 
+                                        selected = c("intersection_IDs", "intersection_ensembl", "intersection_entrez")),
                      sliderInput("pval", "Change Minimum FDR-value (1.0 means no filtering):", min = 0.01, max = 1.00, value = 0.05, step = 0.01),
                      div(style="display: inline-block;vertical-align:left; height:120px; width: 120px;",actionButton("searchGene", label = "Query Genes")),
                      div(style="display: inline-block;vertical-align:left; height: 120px; width: 120px;",downloadButton("dwnld", "Download Results"))
@@ -153,12 +151,18 @@ server <- function(input, output, session) {
     # the downregPaste/upregPaste extracts the genes from the xlsx file and pastes it into
     # the textbox for user. The observeEvent function monitors the Toy dataset
     # buttons, and if either is clicked, it calls the corresponding function
-    downregPaste <- reactive(
-        updateTextInput(session, "txtGeneID", value = toString(paste(unlist(toyDatasetDown)))))
+    downregPaste <- reactive({
+        if (input$databaseType == "human") {
+            toyDatasetDown <- human.ASDdown.2.3
+        }
+        updateTextInput(session, "txtGeneID", value = toString(paste(unlist(toyDatasetDown))))})
     observeEvent(input$downregToy, downregPaste())
     
-    upregPaste <- reactive(
-        updateTextInput(session, "txtGeneID", value = toString(paste(unlist(toyDatasetUp)))))
+    upregPaste <- reactive({
+        if (input$databaseType == "human") {
+            toyDatasetUp <- human.ASDup.2.3
+            }
+        updateTextInput(session, "txtGeneID", value = toString(paste(unlist(toyDatasetUp))))})
     observeEvent(input$upregToy, upregPaste())
 
     
@@ -186,9 +190,11 @@ server <- function(input, output, session) {
         switch(input$typeID, 
                ensembl_gene_id = "ensembl_gene_id",
                entrezgene_id = "entrezgene_id",
-               mgi_symbol = "mgi_symbol")
+               gene_symbol = switchSpeciesSymbol())
     })
     
+    # set default value of df (to be changed in reactive expression eval later)
+    speciesGenes <- mouse_genes
     
     
     # Overlap Function --------------------------------------------------------
@@ -198,7 +204,7 @@ server <- function(input, output, session) {
     # genelists = Lists is the database of MG genes we currently are using
     # genomesize is the size of the list of genes used (which varies based on gene ID type)
     
-    Overlap_fxn <- function(targetlistname,genelists = List,genomesize){
+    Overlap_fxn <- function(targetlistname,genelists = List,genomesize, species_genes){
         
         #eventual output
         out <- NULL
@@ -222,13 +228,13 @@ server <- function(input, output, session) {
             
             #extract contingency table
             CT <- getContbl(go.obj)
-            notAnotB <- CT[1,1]
-            inAnotB <- CT[1,2]
-            inBnotA <- CT[2,1]
-            inBinA <- CT[2,2]
+            not_in_both_lists <- CT[1,1]
+            in_userlist_only <- CT[1,2]
+            in_database_only <- CT[2,1]
+            in_both_lists <- CT[2,2]
             
             #merges results to a table
-            CTlist <- cbind(notAnotB,inAnotB,inBnotA,inBinA)
+            CTlist <- cbind(not_in_both_lists,in_userlist_only,in_database_only,in_both_lists)
             
             #get list of intersections - this will get different ids based on user input.
             intersection <- go.obj@intersection
@@ -241,24 +247,23 @@ server <- function(input, output, session) {
             # then it will look to see if there is a corresponding match of other IDs in the same row
             
             # get Ensembl IDs
-            intersection_ensembl <- mouse_genes$ensembl_gene_id[which(pull(mouse_genes, switchList()) %in% intersection)]
+            intersection_ensembl <- species_genes$ensembl_gene_id[which(pull(species_genes, switchList()) %in% intersection)]
             intersection_ensembl <- paste(as.character(intersection_ensembl),collapse=", ",sep="")
             
             #get intersection gene names
-            intersection_mgi_symbol <- mouse_genes$mgi_symbol[which(pull(mouse_genes, switchList()) %in% intersection)]
-            intersection_mgi_symbol <- paste(as.character(intersection_mgi_symbol),collapse=", ",sep="")
+            intersection_gene_symbol <- species_genes[,switchSpeciesSymbol()]
+            intersection_gene_symbol <- intersection_gene_symbol[which(pull(species_genes, switchList()) %in% intersection)]
+            intersection_gene_symbol <- paste(as.character(intersection_gene_symbol),collapse=", ",sep="")
             
             # get entrez IDs
-            intersection_entrez <- mouse_genes$entrezgene_id[which(pull(mouse_genes, switchList()) %in% intersection)]
+            intersection_entrez <- species_genes$entrezgene_id[which(pull(species_genes, switchList()) %in% intersection)]
             intersection_entrez <- paste(as.character(intersection_entrez), collapse = ", ", sep ="")
             
             #get listname
             listname <- paste(names(genelists[i]))
             
             #combine results
-            results <- cbind(listname,pvalue,OR, CTlist,intersection_IDs, intersection_ensembl,intersection_mgi_symbol, intersection_entrez)
-            
-            #colnames(results) <- c("listname","pvalue","OR","notAnotB","inAnotB","inBnotA","inBinA","intersection_IDs", "ensembl","MGI", "entrez")
+            results <- cbind(listname,pvalue,OR, CTlist,intersection_IDs, intersection_ensembl,intersection_gene_symbol, intersection_entrez)
             
             # bind to output
             out <- rbind(out,results) 
@@ -269,10 +274,10 @@ server <- function(input, output, session) {
         
         #cast to numeric (necessary for the sorting feature in the application)
         out$OR <- as.numeric(out$OR)
-        out$notAnotB <- as.numeric(out$notAnotB)
-        out$inAnotB <- as.numeric(out$inAnotB)
-        out$inBnotA <- as.numeric(out$inBnotA)
-        out$inBinA <- as.numeric(out$inBinA)
+        out$not_in_both_lists <- as.numeric(out$not_in_both_lists)
+        out$in_userlist_only <- as.numeric(out$in_userlist_only)
+        out$in_database_only <- as.numeric(out$in_database_only)
+        out$in_both_lists <- as.numeric(out$in_both_lists)
         
         rownames(out) <- NULL
         
@@ -320,14 +325,14 @@ server <- function(input, output, session) {
             sapply(na.omit) %>% 
             sapply(unique) 
         
-        # generate MGI list
-        mgiList <- split(masterlistFiltered$mgi_symbol, masterlistFiltered$listname) %>% 
+        # generate Gene Symbol list
+        geneSymbolList <- split(masterlistFiltered[,switchSpeciesSymbol()], masterlistFiltered$listname) %>% 
             sapply(na.omit) %>% 
             sapply(unique)
         
         
         #initializes default mm10 values
-        mm10genome <- length(unique(mouse_genes$mgi_symbol))
+        mm10genome <- length(unique(speciesGenes[, switchSpeciesSymbol()]))
         mm10genes <- length(unique(masterlistFiltered$ensembl_gene_id))
         
         
@@ -377,8 +382,8 @@ server <- function(input, output, session) {
         # based on the gene ID type specified by the user
         matchList <- if (switchList() == "ensembl_gene_id") {
             List <- ensemblList
-        } else if (switchList() == "mgi_symbol") {
-            List <- mgiList
+        } else if (switchList() == "mgi_symbol" | switchList() == "hgnc_symbol") {
+            List <- geneSymbolList
         } else {
             List <- entrezList
         }
@@ -386,11 +391,11 @@ server <- function(input, output, session) {
         #switch is used to determine which mm10genome size to use based on which
         # gene ID type is specified by the user. The size varies by gene ID type
         matchMm10Genome <- if (switchList() == "ensembl_gene_id"){
-            mm10genome <- length(unique(mouse_genes$ensembl_gene_id))
+            mm10genome <- length(unique(speciesGenes$ensembl_gene_id))
         } else if (switchList() == "entrezgene_id") {
-            mm10genome <- length(unique(mouse_genes$entrezgene_id))
-        } else if (switchList() == "mgi_symbol") {
-            mm10genome <- length(unique(mouse_genes$mgi_symbol))
+            mm10genome <- length(unique(speciesGenes$entrezgene_id))
+        } else if (switchList() == "mgi_symbol" | switchList() == "hgnc_symbol") {
+            mm10genome <- length(unique(speciesGenes[,switchSpeciesSymbol()]))
         }
         
         #switch is used to determine which mm10gene to use
@@ -398,8 +403,8 @@ server <- function(input, output, session) {
             mm10genes <- length(unique(unlist(ensemblList)))
         } else if (switchList() == "entrezgene_id") {
             mm10genes <- length(unique(unlist(entrezList)))
-        } else if (switchList() == "mgi_symbol") {
-            mm10genes <- length(unique(unlist(mgiList)))
+        } else if (switchList() == "mgi_symbol" | switchList() == "hgnc_symbol") {
+            mm10genes <- length(unique(unlist(geneSymbolList)))
         }
         
         # Reading Custom Uploaded Background Lists -----------
@@ -433,11 +438,13 @@ server <- function(input, output, session) {
         # the code for actually running the functions
         
         #run overlap function
-        results <- Overlap_fxn(targetlistname = unique(geneQueryDecide), genelists = List,
+        results <- Overlap_fxn(targetlistname = unique(geneQueryDecide), 
+                               genelists = List,
                                genomesize = switch(input$background,
                                                    "reference" = mm10genome,
                                                    "intersection" = mm10genes,
-                                                   "custom" = backgroundQuerySize))
+                                                   "custom" = backgroundQuerySize),
+                               species_genes = speciesGenes)
         
         #adjust pvalue
         results$pvalue <- as.numeric(formatC(x = as.numeric(as.character(results$pvalue)), format = "E"))
@@ -450,7 +457,7 @@ server <- function(input, output, session) {
         
         #gets gene list information
         geneListInfo <- masterlistFiltered %>%
-            dplyr::select(-ensembl_gene_id, -mgi_symbol, -entrezgene_id) %>% 
+            dplyr::select(-ensembl_gene_id, -switchSpeciesSymbol(), -entrezgene_id) %>% 
             distinct()
         
         #change one of the gene list names to be correct

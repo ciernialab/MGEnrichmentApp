@@ -66,7 +66,8 @@ ensgenes$full.source <- c("Ayata P, Badimon A, Strasburger HJ, et al. Epigenetic
 mouse.master3 <- rbind(mouse.master3,ensgenes)
 
 #generate new summary file
-mouse.sum <- mouse.master3 %>% distinct() %>%
+mouse.sum <- mouse.master3 %>% select(listname,description,source,groups,tissue,Species,full.source,ensembl_gene_id) %>%
+  distinct() %>%
   group_by(listname,description,source,groups,tissue,Species,full.source) %>% 
   summarize(ensemble.genes = n())
 
@@ -95,7 +96,8 @@ colnames(tmp)[2:4] <- c("ensembl_gene_id", "hgnc_symbol" ,    "entrezgene_id" )
 human.master3 <- rbind(human.master3,tmp)
 
 #generate new summary file
-human.sum <-human.master3 %>% distinct() %>%
+human.sum <- human.master3 %>% select(listname,description,source,groups,tissue,Species,full.source,ensembl_gene_id) %>%
+  distinct() %>%
   group_by(listname,description,source,groups,tissue,Species,full.source) %>% 
   summarize(ensemble.genes = n())
 
@@ -142,7 +144,8 @@ ensgenes <- ensgenes[,c(11,1,9,10,13,12,14:17)]
 human.master3 <- rbind(human.master3,ensgenes)
 
 #generate new summary file
-human.sum <- human.master3 %>% distinct() %>%
+human.sum <- human.master3 %>% select(listname,description,source,groups,tissue,Species,full.source,ensembl_gene_id) %>%
+  distinct() %>%
   group_by(listname,description,source,groups,tissue,Species,full.source) %>% 
   summarize(ensemble.genes = n())
 
@@ -173,7 +176,8 @@ colnames(tmp)[2:4] <- c("ensembl_gene_id", "mgi_symbol" ,    "entrezgene_id" )
 mouse.master3 <- rbind(mouse.master3,tmp)
 
 #generate new summary file
-mouse.sum <- mouse.master3 %>% distinct() %>%
+mouse.sum <- mouse.master3 %>% select(listname,description,source,groups,tissue,Species,full.source,ensembl_gene_id) %>%
+  distinct() %>%
   group_by(listname,description,source,groups,tissue,Species,full.source) %>% 
   summarize(ensemble.genes = n())
 

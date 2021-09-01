@@ -41,7 +41,6 @@ The database includes the following information for each genelist within each da
 - **ensembl_gene_id** - all the ensembl IDs in the list
 - **mgi_symbol or hgnc_symbol** - the corresponding gene symbols in the list
 - **entrezgene_id** - the corresponding entrez IDs in the list   
-- **listname** - a short and succinct name/tag for the list
 - **description** - a longer description of what the genes in the list are (e.g. DEGs from WT vs Mutant microglia)
 - **source** - paper citation for the list
 - **groups** - broad category of the list, belonging to one of the following:
@@ -82,10 +81,10 @@ Or, you can download the datasets and their output results directly [here.](http
 - **listname** - name of the gene set that is being compared against.
 - **pvalue** - p-value of enrichment analysis (as calculated by one-tailed Fisher's Exact Test).
 - **OR** - the Odds Ratio.
-- **notAnotB** - number of genes not in any gene set.
-- **inAnotB** - number of genes in the user's uploaded gene set (set A) but not in the current database gene set being analyzed (set B).
-- **inBnotA** - number of genes in the current database gene set (set B) but not in the user uploaded gene set (set A).
-- **inBinA** - number of genes in both the current database gene set and the user uploaded gene set.
+- **not_in_both_lists** - number of genes not in any gene set.
+- **in_userlist_only** - number of genes in the user's uploaded gene set (set A) but not in the current database gene set being analyzed (set B).
+- **in_database_only** - number of genes in the current database gene set (set B) but not in the user uploaded gene set (set A).
+- **in_both_lists** - number of genes in both the current database gene set and the user uploaded gene set.
 - **intersection_IDs** - the direct list of overlapping gene IDs (inBinA). This will be in the gene ID type that you have selected, and is the original overlap list, so use this for final results.
 - **intersection_ensembl** - the intersection_IDs, converted to ensembl
 - **intersection_mgi_symbol or intersection_hgnc_symbol** - the intersection_IDs, converted to symbols
@@ -161,7 +160,6 @@ If you have any further questions or concerns about the app and how to use it, y
 ## References
 - Gupta S, Ellis SE, Ashar FN, Moes A, Bader JS, Zhan J, et al. Transcriptome analysis reveals dysregulation of innate immune response genes and neuronal activity-dependent genes in autism. Nat Commun [Internet]. 2014;5:5748. Available from: http://www.nature.com/doifinder/10.1038/ncomms6748
 - Parikshak NN, Swarup V, Belgard TG, Irimia M, Ramaswami G, Gandal MJ, et al. Genome-wide changes in lncRNA, splicing, and regional gene expression patterns in autism. Nature [Internet]. 2016 Dec 5 [cited 2017 Jul 18];540(7633):423–7. Available from: https://www.ncbi.nlm.nih.gov/pubmed/27919067%5Cnhttp://www.nature.com/nature/journal/vaop/ncurrent/pdf/nature20612.pdf
-- Gandal MJ, Zhang P, Hadjimichael E, Walker RL, Chen C, Liu S, et al. Transcriptome-wide isoform-level dysregulation in ASD, schizophrenia, and bipolar disorder. Science (80- ) [Internet]. 2018 Dec 14 [cited 2018 Dec 18];362(6420):eaat8127. Available from: http://www.ncbi.nlm.nih.gov/pubmed/30545856
 - Gandal MJ, Haney J, Parikshak N, Leppa V, Horvath S, Geschwind DH. Shared molecular neuropathology across major psychiatric disorders parallels polygenic overlap. Science (80- ) [Internet]. 2018;693(February):693–7. Available from: http://biorxiv.org/content/early/2016/02/18/040022.abstract
 
 

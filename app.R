@@ -79,7 +79,7 @@ ui <- dashboardPage(
                                         choiceValues = unique(masterlist$groups),
                                         selected = c("Microglia", "Microglia Development", "inflammation")),
                      radioButtons("background", "Set the background query:",
-                                  choices = c("All mm10 Genes" = "reference",
+                                  choices = c("All mm10 Genes or hg38 Genes" = "reference",
                                               "All Genes in the Database" = "intersection",
                                               "Custom" = "custom")),
                      

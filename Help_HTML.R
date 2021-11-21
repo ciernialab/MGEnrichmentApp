@@ -4,7 +4,15 @@ displayHelp <- HTML('
 </p>
 
 <p style="font-size:20px">
-Here we provide a short guide to using the app. For more detailed documentation, please visit the <u><a href="https://github.com/ciernialab/MGEnrichmentApp">GitHub repository</a>.</u>
+Here we provide a short guide to using the app. 
+<br>
+<br>
+For a more extensive overview of the application, you may be interested in our publication (<a href="https://doi.org/10.1371/journal.pcbi.1009160"><u>Jao & Ciernia, 2021</u></a>).
+<br>
+<br>
+For more detailed documentation and instructions, please visit the <u><a href="https://github.com/ciernialab/MGEnrichmentApp">GitHub repository</a>.</u>
+<br>
+
 </p>
 <br>
 <br>
@@ -106,6 +114,9 @@ The <b>intersection_ids</b> is the original list of overlapping gene IDs, in the
 <br>
 <br>
 
-  <br>
-  <br>
+<h3 style = "font-size: 20px;font-weight: bold">References</h3>
+<b>Jao J, Ciernia AV (2021) MGEnrichment: A web application for microglia gene list enrichment analysis. PLOS Computational Biology 17(11): e1009160. https://doi.org/10.1371/journal.pcbi.1009160</b>
+<br>
+<br>
+  
 ')

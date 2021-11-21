@@ -22,6 +22,8 @@ This is the repository for the [Ciernia Lab's Microglia Gene Set Enrichment Calc
 
 The calculator was built to enable those who may be less proficient in statistical analysis, or less familiar with the R programming language, to easily perform gene set enrichment analysis without needing to directly interface with R code. The app runs enrichment analysis on a list of manually curated mouse gene sets relevant to microglia and early development (and thus, to the Ciernia lab's field of research!). The hope is that users will be able to conduct gene set enrichment analysis on their own experiments, even if they are unfamiliar with R, or do not know how to implement gene set enrichment analysis.
 
+For a more extensive overview of the application, you may be interested in our publication [(Jao & Ciernia, 2021)](https://doi.org/10.1371/journal.pcbi.1009160).
+
 ## Basic Functionality/Explanation
 
 ![Diagram of Enrichment Analysis](www/venn_diagram.png)
@@ -158,21 +160,8 @@ If you want to build your own version of the app and need to update the gene lis
 If you have any further questions or concerns about the app and how to use it, you can contact the Dr. Ciernia at annie.ciernia@ubc.ca or submit a github ticket on this hub.
 
 ## References
+- Jao J, Ciernia AV (2021) MGEnrichment: A web application for microglia gene list enrichment analysis. PLOS Computational Biology 17(11): e1009160. https://doi.org/10.1371/journal.pcbi.1009160
 - Gupta S, Ellis SE, Ashar FN, Moes A, Bader JS, Zhan J, et al. Transcriptome analysis reveals dysregulation of innate immune response genes and neuronal activity-dependent genes in autism. Nat Commun [Internet]. 2014;5:5748. Available from: http://www.nature.com/doifinder/10.1038/ncomms6748
 - Parikshak NN, Swarup V, Belgard TG, Irimia M, Ramaswami G, Gandal MJ, et al. Genome-wide changes in lncRNA, splicing, and regional gene expression patterns in autism. Nature [Internet]. 2016 Dec 5 [cited 2017 Jul 18];540(7633):423–7. Available from: https://www.ncbi.nlm.nih.gov/pubmed/27919067%5Cnhttp://www.nature.com/nature/journal/vaop/ncurrent/pdf/nature20612.pdf
 - Gandal MJ, Haney J, Parikshak N, Leppa V, Horvath S, Geschwind DH. Shared molecular neuropathology across major psychiatric disorders parallels polygenic overlap. Science (80- ) [Internet]. 2018;693(February):693–7. Available from: http://biorxiv.org/content/early/2016/02/18/040022.abstract
 
-
-<!---- ## Info for Developers
-
-Provided here are tips/useful things to know that anyone who might want to modify the app may find useful.
-
-At the moment, the app essentially serves as a wrapper for the GeneOverlap R package (which can be found on bioconductor).
-
-If you ever need to modify the core functionality of the app, and find that the dashboard layout is interfering with output, you can simply remove the dashboard theme and stick with the default side bar layout that R Shiny utilizies. If needed, there is a copy of the app using the default layout, which can be found here().
-
-The functions are executed pretty much sequentially exactly as they were laid out. For clarity's sake, I've provided a pseudo call graph here:
-
-**need to write call graph**
-
------->

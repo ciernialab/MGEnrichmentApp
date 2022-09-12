@@ -248,15 +248,18 @@ server <- function(input, output, session) {
             
             # get Ensembl IDs
             intersection_ensembl <- species_genes$ensembl_gene_id[which(pull(species_genes, switchList()) %in% intersection)]
+            intersection_ensembl <- unique(intersection_ensembl)
             intersection_ensembl <- paste(as.character(intersection_ensembl),collapse=", ",sep="")
             
             #get intersection gene names
             intersection_gene_symbol <- species_genes[,switchSpeciesSymbol()]
             intersection_gene_symbol <- intersection_gene_symbol[which(pull(species_genes, switchList()) %in% intersection)]
+            intersection_gene_symbol <- unique(intersection_gene_symbol)
             intersection_gene_symbol <- paste(as.character(intersection_gene_symbol),collapse=", ",sep="")
             
             # get entrez IDs
             intersection_entrez <- species_genes$entrezgene_id[which(pull(species_genes, switchList()) %in% intersection)]
+            intersection_entrez <- unique(intersection_entrez)
             intersection_entrez <- paste(as.character(intersection_entrez), collapse = ", ", sep ="")
             
             #get listname

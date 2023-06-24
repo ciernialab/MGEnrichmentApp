@@ -34,6 +34,8 @@ We use the GeneOverlap Function (http://bioconductor.org/packages/release/bioc/h
 
 The database of gene lists has been manually curated to include a wide assortment of microglial relevant gene lists collected from multiple treatments, disease states, etc in microglia or brain from mouse, human or rat. For the mouse database, all gene ids were converted to mouse if originally in human or rat. For the human database, all gene ids were converted to human if originally in mouse or rat.
 
+Most recent database update was July 2023. The older (August 2021) database is available as an RData file in the repository.
+
 A summary of the database including papers, lists and numbers of genes is included here as: 
 Mouse: [MouseMasterSummary.final.csv](https://github.com/ciernialab/MGEnrichmentApp/blob/main/MouseMasterSummary.final.csv)
 Human: [HumanMasterSummary.final.csv](https://github.com/ciernialab/MGEnrichmentApp/blob/main/HumanMasterSummary.final.csv)

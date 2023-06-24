@@ -46,7 +46,7 @@ The database includes the following information for each genelist within each da
 - **description** - a longer description of what the genes in the list are (e.g. DEGs from WT vs Mutant microglia)
 - **source** - paper citation for the list
 - **groups** - broad category of the list, belonging to one of the following:
-	- *Neuropsychatic & Neurodevelopmental Disorders human brain*
+	- *Human Brain Disorders*
 	- *Microglia Development*
 	- *Microglia*
 	- *ASD regulators*

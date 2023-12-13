@@ -20,8 +20,9 @@ library(DT)
 library(shinydashboard)
 library(BiocManager)
 library(readxl)
-options(repos = BiocManager::repositories())
-getOption("repos")
+library(BiocGenerics)
+#options(repos = BiocManager::repositories())
+#getOption("repos")
 
 #If needed, the datasets can be regenerated using the NewGeneLists.R script
 
